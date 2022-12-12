@@ -57,7 +57,7 @@ function CreateDB
             read
 	elif [[ $dbName =~ ^[a-zA-Z] ]] 
         then
-            mkdir -p "./DBMS/$dbName"
+            mkdir -p "./$dbName"
             cd "./$dbName" > /dev/null 2>&1
             echo -e "${BABYBLUE}database created sucessfully${ENDCOLOR}"
             database_page=false
@@ -87,7 +87,7 @@ function DropDB
                 echo press any key
                 read       
         else
-                rm -r "./DBMS/$dbName"
+                rm -r "./$dbName"
                 echo "${BABYBLUE}$dbName removed from your databases${ENDCOLOR}"
                 echo press any key
                 read
