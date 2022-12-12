@@ -13,21 +13,27 @@ function database_page
     do
     case $REPLY in
         1) 
-            createDB;
+            CreateDB;
             ;;
         2) 
-            exit
+            DisplayDB
             ;;
         3)
-        ;;
+            SelectDB
+            ;;
         4)
-        ;;
+            DropDB
+            ;;
         5)
+            Back
         cd ..
         First_page=true
         database_page=false
         create_table_page=false
-        ;;
+            ;;
+        6) 
+            exit
+            ;;
         *)
             invalid_list_input_handle;
             ;;
@@ -35,7 +41,7 @@ function database_page
     break
     done
 }
-function createDB 
+function CreateDB 
 {
     echo enter the name of the database please
 	read dbName
@@ -51,7 +57,7 @@ function createDB
             read
 	elif [[ $dbName =~ ^[a-zA-Z] ]] 
         then
-            mkdir -p "$dbName"
+            mkdir -p "./DBMS/$dbName"
             cd "./$dbName" > /dev/null 2>&1
             echo -e "${BABYBLUE}database created sucessfully${ENDCOLOR}"
             database_page=false
@@ -63,4 +69,27 @@ function createDB
 		echo Please try again
 		read
 	fi
+}
+
+# Delete Database
+function DropDB 
+{
+    separator;    
+    echo "enter the name of the database"
+        read dbName
+        db="$dbName"
+        if [[ "$dbName" = '' ]]; then
+                echo "${ERRORCOLOR}invalid value, please enter the correct name${ENDCOLOR}"
+                echo press any key
+                read
+        elif ! [[ -d "$dbName" ]]; then
+                echo "${ERRORCOLOR}this database doesn't exist${ENDCOLOR}"
+                echo press any key
+                read       
+        else
+                rm -r "./DBMS/$dbName"
+                echo "${BABYBLUE}$dbName removed from your databases${ENDCOLOR}"
+                echo press any key
+                read
+        fi
 }
