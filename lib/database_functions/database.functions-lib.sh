@@ -74,21 +74,21 @@ function CreateDB
 # Delete Database
 function DropDB 
 {
-    separator;    
+    divider;    
     echo "enter the name of the database"
         read dbName
         db="$dbName"
         if [[ "$dbName" = '' ]]; then
-                echo "${ERRORCOLOR}invalid value, please enter the correct name${ENDCOLOR}"
+                echo -e "${ERRORCOLOR}Cant delete a database without a name${ENDCOLOR}"
                 echo press any key
                 read
         elif ! [[ -d "$dbName" ]]; then
-                echo "${ERRORCOLOR}this database doesn't exist${ENDCOLOR}"
+                echo -e "${ERRORCOLOR}This database doesn't exist${ENDCOLOR}"
                 echo press any key
                 read       
         else
                 rm -r "./$dbName"
-                echo "${BABYBLUE}$dbName removed from your databases${ENDCOLOR}"
+                echo -e "${BABYBLUE}$dbName removed from your databases${ENDCOLOR}"
                 echo press any key
                 read
         fi
