@@ -89,7 +89,7 @@ function SelectDB
     db="$dbName"
 
         if [[ "$dbName" = '' ]]; then
-				echo -e "${ERRORCOLOR}Invalid value, please enter a correct name then click enter${ENDCOLOR}"
+				echo -e "${ERRORCOLOR}please enter a correct name then click enter, Don't try this character again${ENDCOLOR}"
             elif ! [[ -d "$dbName" ]]; then
 				echo -e "${ERRORCOLOR}This database_name doesn't exist${ENDCOLOR}"
 
