@@ -46,25 +46,17 @@ function create_table
     read table_name
 	if [[ $table_name = "" ]]
         then
-            echo -e "${ERRORCOLOR}Cant create a table without a name${ENDCOLOR}"
-            echo Please enter a name 
-            read	
+            sending_output_to_the_user "${ERRORCOLOR}Cant create a table without a name${ENDCOLOR}"
 	elif [[ -e $table_name ]] 
         then
-            echo -e "${ERRORCOLOR}This table name is already exsists${ENDCOLOR}"
-            echo Please enter another name
-            read
+            sending_output_to_the_user "${ERRORCOLOR}This table name is already exsists${ENDCOLOR}"
     elif [[ $table_name =~ [/] ]] 
         then
-            echo -e "${ERRORCOLOR}Can't use / in naming the table${ENDCOLOR}"
-            echo Please enter another name
-            read
+            sending_output_to_the_user "${ERRORCOLOR}Can't use / in naming the table${ENDCOLOR}"
 	elif [[ $table_name =~ ^[a-zA-Z] ]] 
         then
             touch $table_name
             #table_fields;
-            echo -e "${BABYBLUE}Table created sucessfully${ENDCOLOR}"
-            echo press any key
-            read
+            sending_output_to_the_user "${BABYBLUE}Table created sucessfully${ENDCOLOR}"
 	fi
 }

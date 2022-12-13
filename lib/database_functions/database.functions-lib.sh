@@ -47,27 +47,19 @@ function CreateDB
 	read dbName
 	if [[ $dbName = "" ]]
         then
-            echo -e "${ERRORCOLOR}Cant create a database without a name${ENDCOLOR}"
-            echo Please enter a name 
-            read	
+            sending_output_to_the_user "${ERRORCOLOR}Cant create a database without a name${ENDCOLOR}"
 	elif [[ -e $dbName ]] 
         then
-            echo -e "${ERRORCOLOR}This database name is already exsists${ENDCOLOR}"
-            echo Please enter another name
-            read
+            sending_output_to_the_user "${ERRORCOLOR}This database name is already exsists${ENDCOLOR}"
 	elif [[ $dbName =~ ^[a-zA-Z] ]] 
         then
             mkdir -p "./$dbName"
             cd "./$dbName" > /dev/null 2>&1
-            echo -e "${BABYBLUE}database created sucessfully${ENDCOLOR}"
             database_page=false
             create_table_page=true
-            echo press any key
-            read
+            sending_output_to_the_user "${BABYBLUE}database created sucessfully${ENDCOLOR}"
 	else
-		echo -e "${ERRORCOLOR}Database name can't start with numbers or special characters${ENDCOLOR}"
-		echo Please try again
-		read
+		sending_output_to_the_user "${ERRORCOLOR}Database name can't start with numbers or special characters${ENDCOLOR}"
 	fi
 }
 
@@ -79,17 +71,11 @@ function DropDB
         read dbName
         db="$dbName"
         if [[ "$dbName" = '' ]]; then
-                echo -e "${ERRORCOLOR}Cant delete a database without a name${ENDCOLOR}"
-                echo press any key
-                read
+                sending_output_to_the_user "${ERRORCOLOR}Cant delete a database without a name${ENDCOLOR}"
         elif ! [[ -d "$dbName" ]]; then
-                echo -e "${ERRORCOLOR}This database doesn't exist${ENDCOLOR}"
-                echo press any key
-                read       
+                sending_output_to_the_user "${ERRORCOLOR}This database doesn't exist${ENDCOLOR}"    
         else
                 rm -r "./$dbName"
-                echo -e "${BABYBLUE}$dbName removed from your databases${ENDCOLOR}"
-                echo press any key
-                read
+                sending_output_to_the_user "${BABYBLUE}$dbName removed from your databases${ENDCOLOR}"
         fi
 }
