@@ -56,7 +56,25 @@ function create_table
 	elif [[ $table_name =~ ^[a-zA-Z] ]] 
         then
             touch $table_name
-            #table_fields;
+            table_fields;
             sending_output_to_the_user "${BABYBLUE}Table created sucessfully${ENDCOLOR}"
 	fi
+}
+function table_fields 
+{
+  echo "Enter number of columns please"
+  read number_of_columns
+  if ! [[ "$number_of_columns" = +([1-9])*([0-9]) ]]; then
+        echo -e "${ERRORCOLOR}Enter valid number${ENDCOLOR}"
+        read number_of_columns
+    fi
+
+for (( i = 0; i < number_of_columns; i++ ));
+do
+    get_input "Enter column number $[i+1] name" 
+    is_primary_key;
+    get_data_size;
+    get_data_type;
+    echo -n ":" >> "$table_name"
+done
 }

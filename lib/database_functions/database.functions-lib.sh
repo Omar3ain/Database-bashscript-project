@@ -62,7 +62,6 @@ function CreateDB
 		sending_output_to_the_user "${ERRORCOLOR}Database name can't start with numbers or special characters${ENDCOLOR}"
 	fi
 }
-
 # Delete Database
 function DropDB 
 {
