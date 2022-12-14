@@ -15,8 +15,8 @@ function database_page
         1) 
             CreateDB;
             ;;
-        2) 
-            DisplayDB
+        2)  
+            ls ./databases/*
             ;;
         3)
             SelectDB
@@ -43,11 +43,11 @@ function database_page
 }
 function CreateDB 
 {
-    echo enter the name of the database please
+    echo -e "Enter the name of the database please"
 	read dbName
 	if [[ $dbName = "" ]]
         then
-            sending_output_to_the_user "${ERRORCOLOR}Cant create a database without a name${ENDCOLOR}"
+            sending_output_to_the_user "${ERRORCOLOR}Can't create a database without a name${ENDCOLOR}"
 	elif [[ -e $dbName ]] 
         then
             sending_output_to_the_user "${ERRORCOLOR}This database name is already exsists${ENDCOLOR}"
@@ -57,7 +57,7 @@ function CreateDB
             cd "./$dbName" > /dev/null 2>&1
             database_page=false
             create_table_page=true
-            sending_output_to_the_user "${BABYBLUE}database created sucessfully${ENDCOLOR}"
+            sending_output_to_the_user "${BABYBLUE}Database created sucessfully${ENDCOLOR}"
 	else
 		sending_output_to_the_user "${ERRORCOLOR}Database name can't start with numbers or special characters${ENDCOLOR}"
 	fi
@@ -66,15 +66,35 @@ function CreateDB
 function DropDB 
 {
     divider;    
-    echo "enter the name of the database"
+    echo -e "Enter the name of the database"
         read dbName
         db="$dbName"
         if [[ "$dbName" = '' ]]; then
-                sending_output_to_the_user "${ERRORCOLOR}Cant delete a database without a name${ENDCOLOR}"
+                sending_output_to_the_user "${ERRORCOLOR}Can't delete a database without a name${ENDCOLOR}"
         elif ! [[ -d "$dbName" ]]; then
                 sending_output_to_the_user "${ERRORCOLOR}This database doesn't exist${ENDCOLOR}"    
         else
                 rm -r "./$dbName"
-                sending_output_to_the_user "${BABYBLUE}$dbName removed from your databases${ENDCOLOR}"
+                sending_output_to_the_user "${BABYBLUE}$dbName Removed from your databases${ENDCOLOR}"
+        fi
+}
+
+# Select Database
+function SelectDB 
+{
+    divider;
+    echo -e "Enter Database Name: "
+    read dbName
+    db="$dbName"
+
+        if [[ "$dbName" = '' ]]; then
+				echo -e "${ERRORCOLOR}please enter a correct name then click enter, Don't try this character again${ENDCOLOR}"
+        elif ! [[ -d "$dbName" ]]; then
+				echo -e "${ERRORCOLOR}This database_name doesn't exist${ENDCOLOR}"
+
+        else
+                divider;
+                cd "$dbName"
+                echo -e "${BABYBLUE}Welcome to Database $dbName ${ENDCOLOR}"
         fi
 }
