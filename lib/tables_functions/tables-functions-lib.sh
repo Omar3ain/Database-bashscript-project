@@ -9,7 +9,7 @@ function table_page_title
 function table_page 
 {
     table_page_title;
-    select choice in "Create Table" "List Tables" "Drop Table" "Insert into Table" "Select From Table" "Delete From Table" "Update Table"
+    select choice in "Create Table" "List Tables" "Drop Table" "Insert into Table" "Select From Table" "Delete From Table" "Update Table" "Back"
     do
     case $REPLY in
         1)
@@ -32,6 +32,12 @@ function table_page
             ;;
         7)
             update_table;
+            ;;
+        8)
+            cd ..
+            First_page=false
+            database_page=true
+            create_table_page=false
             ;;
         *)
             invalid_list_input_handle;
@@ -88,14 +94,35 @@ function drop_table
     divider;
     echo "enter the name of the table that you want to delete: "
 	read dbtable_name
-         if [[ $? == 0 ]]
-        then
-            rm "dbtable"
-            sending_output_to_the_user "${BABYBLUE}Table $dbtable_name Dropped Successfully${ENDCOLOR}"
+	if ! [[ -f "$dbtable_name" ]]; then
+		sending_output_to_the_user "${ERRORCOLOR}this table doesn't exist${ENDCOLOR}"
+	else
+		rm "$dbtable_name"
+		sending_output_to_the_user "${BABYBLUE}mtable deleted${ENDCOLOR}"
+	fi
+}
+function list_tables 
+{
+    echo -e "${BABYBLUE}List of all tables in the database${ENDCOLOR}"
+    ls
+    read
+}
+function insert_into_table
+{
+    echo -e "Type table name please"
+    read table_name
+    number_of_fields=$(head -1 "$table_name" | awk -F: '{print NF}') 
+    for (( i = 0; i < number_of_fields; i++ ));
+    do
+     echo -e "Enter field $[i+1] data "
+     read
+     if [[ i -eq $number_of_fields-1 ]]; then
+            echo "$REPLY" >> "$table_name"
+            echo -e "\e[42mentry inserted successfully\e[0m"
         else
-            sending_output_to_the_user "${ERRORCOLOR}Error Dropping Table $dbtable ${ENDCOLOR}"
+            echo -n "$REPLY": >> "$table_name"
         fi
-        table_page;
+    done
 }
 
 # Select From Table
