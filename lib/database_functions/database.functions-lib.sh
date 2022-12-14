@@ -16,7 +16,7 @@ function database_page
             CreateDB;
             ;;
         2)  
-            ls ./databases/*
+            list_databases;
             ;;
         3)
             SelectDB
@@ -26,10 +26,10 @@ function database_page
             ;;
         5)
             Back
-        cd ..
-        First_page=true
-        database_page=false
-        create_table_page=false
+            cd ..
+            First_page=true
+            database_page=false
+            create_table_page=false
             ;;
         6) 
             exit
@@ -78,23 +78,25 @@ function DropDB
                 sending_output_to_the_user "${BABYBLUE}$dbName Removed from your databases${ENDCOLOR}"
         fi
 }
-
 # Select Database
 function SelectDB 
 {
     divider;
     echo -e "Enter Database Name: "
     read dbName
-    db="$dbName"
-
         if [[ "$dbName" = '' ]]; then
-				echo -e "${ERRORCOLOR}please enter a correct name then click enter, Don't try this character again${ENDCOLOR}"
+				sending_output_to_the_user "${ERRORCOLOR}please enter a correct name then click enter, Don't try this character again${ENDCOLOR}"
         elif ! [[ -d "$dbName" ]]; then
-				echo -e "${ERRORCOLOR}This database_name doesn't exist${ENDCOLOR}"
-
+				sending_output_to_the_user "${ERRORCOLOR}This database_name doesn't exist${ENDCOLOR}"
         else
-                divider;
                 cd "$dbName"
-                echo -e "${BABYBLUE}Welcome to Database $dbName ${ENDCOLOR}"
+                database_page=false
+                create_table_page=true
         fi
+}
+function list_databases
+{
+    echo -e "${BABYBLUE}The list of all avaliable databases:${ENDCOLOR}";
+    ls;
+    read
 }

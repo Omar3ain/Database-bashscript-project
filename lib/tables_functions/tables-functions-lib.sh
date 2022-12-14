@@ -69,12 +69,15 @@ function table_fields
         read number_of_columns
     fi
 
-for (( i = 0; i < number_of_columns; i++ ));
-do
-    get_input "Enter column number $[i+1] name" 
-    is_primary_key;
-    get_data_size;
-    get_data_type;
-    echo -n ":" >> "$table_name"
-done
+    for (( i = 0; i < number_of_columns; i++ ));
+    do
+        get_input "Enter column number $[i+1] name" 
+        is_primary_key;
+        get_data_size;
+        get_data_type;
+        if ! [[ i -eq $number_of_columns-1 ]]
+        then
+        echo -n ":" >> "$table_name"
+        fi
+    done
 }
