@@ -86,7 +86,7 @@ function table_fields
 function drop_table 
 {
     divider;
-    echo "enter the name of the table that you want to delete"
+    echo "enter the name of the table that you want to delete: "
 	read dbtable_name
          if [[ $? == 0 ]]
         then
@@ -97,3 +97,21 @@ function drop_table
         fi
         table_page;
 }
+
+# Select From Table
+function select_from_table 
+{
+
+    echo -e "Enter Table Name: "
+    read dbtable_name
+    clear;
+    column -t -s '|' $tName 2>>./.error.log
+        if [[ $? != 0 ]]
+        then
+            echo "${ERRORCOLOR}Error Displaying Table $dbtable_name ${ENDCOLOR}"
+        fi
+        table_page;
+
+}
+
+#delete From Table
