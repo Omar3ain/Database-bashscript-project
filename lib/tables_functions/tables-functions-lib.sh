@@ -90,7 +90,7 @@ function table_fields
 function drop_table 
 {
     divider;
-    echo "enter the name of the table that you want to delete"
+    echo "enter the name of the table that you want to delete: "
 	read dbtable_name
 	if ! [[ -f "$dbtable_name" ]]; then
 		sending_output_to_the_user "${ERRORCOLOR}this table doesn't exist${ENDCOLOR}"
@@ -139,3 +139,21 @@ function insert_into_table
 echo -e "${BABYBLUE}Data inserted successfully${ENDCOLOR}"
 read
 }
+
+# Select From Table
+function select_from_table 
+{
+
+    echo -e "Enter Table Name: "
+    read dbtable_name
+    clear;
+    column -t -s '|' $tName 2>>./.error.log
+        if [[ $? != 0 ]]
+        then
+            echo "${ERRORCOLOR}Error Displaying Table $dbtable_name ${ENDCOLOR}"
+        fi
+        table_page;
+
+}
+
+#delete From Table
