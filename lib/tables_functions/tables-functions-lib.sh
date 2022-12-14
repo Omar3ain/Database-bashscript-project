@@ -95,4 +95,5 @@ function drop_table
         else
             sending_output_to_the_user "${ERRORCOLOR}Error Dropping Table $dbtable ${ENDCOLOR}"
         fi
+        table_page;
 }
