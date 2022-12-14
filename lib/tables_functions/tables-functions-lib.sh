@@ -94,11 +94,12 @@ function drop_table
     divider;
     echo "enter the name of the table that you want to delete"
 	read dbtable_name
-         if [[ $? == 0 ]]
-        then
-        echo -n ":" >> "$table_name"
-        fi
-        table_page;
+	if ! [[ -f "$dbtable_name" ]]; then
+		sending_output_to_the_user "${ERRORCOLOR}this table doesn't exist${ENDCOLOR}"
+	else
+		rm "$dbtable_name"
+		sending_output_to_the_user "${BABYBLUE}mtable deleted${ENDCOLOR}"
+	fi
 }
 function list_tables 
 {
