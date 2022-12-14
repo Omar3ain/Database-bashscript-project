@@ -62,22 +62,37 @@ function create_table
 }
 function table_fields 
 {
-  echo "Enter number of columns please"
-  read number_of_columns
-  if ! [[ "$number_of_columns" = +([1-9])*([0-9]) ]]; then
-        echo -e "${ERRORCOLOR}Enter valid number${ENDCOLOR}"
-        read number_of_columns
-    fi
-
-    for (( i = 0; i < number_of_columns; i++ ));
-    do
-        get_input "Enter column number $[i+1] name" 
-        is_primary_key;
-        get_data_size;
-        get_data_type;
-        if ! [[ i -eq $number_of_columns-1 ]]
-        then
-        echo -n ":" >> "$table_name"
+    echo "Enter number of columns please"
+    read number_of_columns
+    if ! [[ "$number_of_columns" = +([1-9])*([0-9]) ]]; then
+            echo -e "${ERRORCOLOR}Enter valid number${ENDCOLOR}"
+            read number_of_columns
         fi
-    done
+
+        for (( i = 0; i < number_of_columns; i++ ));
+        do
+            get_input "Enter column number $[i+1] name" 
+            is_primary_key;
+            get_data_size;
+            get_data_type;
+            if ! [[ i -eq $number_of_columns-1 ]]
+            then
+            echo -n ":" >> "$table_name"
+            fi
+        done
+}
+
+# Delete Table
+function drop_table 
+{
+    divider;
+    echo "enter the name of the table that you want to delete"
+	read dbtable_name
+         if [[ $? == 0 ]]
+        then
+            rm "dbtable"
+            sending_output_to_the_user "${BABYBLUE}Table $dbtable_name Dropped Successfully${ENDCOLOR}"
+        else
+            sending_output_to_the_user "${ERRORCOLOR}Error Dropping Table $dbtable ${ENDCOLOR}"
+        fi
 }
