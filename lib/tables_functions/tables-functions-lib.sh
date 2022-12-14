@@ -87,8 +87,6 @@ function table_fields
             fi
         done
 }
-
-# Delete Table
 function drop_table 
 {
     divider;
@@ -112,15 +110,32 @@ function insert_into_table
     echo -e "Type table name please"
     read table_name
     number_of_fields=$(head -1 "$table_name" | awk -F: '{print NF}') 
-    for (( i = 0; i < number_of_fields; i++ ));
+    
+    for (( i = 1; i <= number_of_fields; i++ ));
     do
-     echo -e "Enter field $[i+1] data "
-     read
-     if [[ i -eq $number_of_fields-1 ]]; then
+    echo -e "Enter field $[i] data "
+    read
+        notValidData=true
+        while $notValidData
+        do
+        check_type=$(check_datatype $table_name $i $REPLY)
+        if [[ "$check_type" == 0 ]]; 
+        then 
+            echo -e "${ERRORCOLOR}Invalid datatype${ENDCOLOR}"
+            echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+            read
+            else
+            notValidData=false
+        fi
+        #check for size 
+        done
+    if [[ i -eq $number_of_fields ]]; then
             echo "$REPLY" >> "$table_name"
-            echo -e "\e[42mentry inserted successfully\e[0m"
         else
             echo -n "$REPLY": >> "$table_name"
         fi
+        
     done
+echo -e "${BABYBLUE}Data inserted successfully${ENDCOLOR}"
+read
 }
