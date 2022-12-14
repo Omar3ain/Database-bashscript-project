@@ -25,7 +25,6 @@ function database_page
             DropDB
             ;;
         5)
-            Back
             cd ..
             First_page=true
             database_page=false
