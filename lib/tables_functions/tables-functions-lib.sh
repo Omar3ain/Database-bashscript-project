@@ -108,47 +108,57 @@ function list_tables
 }
 function insert_into_table
 {
-    echo -e "Type table name please"
+    echo "Type table name please"
     read table_name
-    number_of_fields=$(head -1 "$table_name" | awk -F: '{print NF}') 
-    
-    for (( i = 1; i <= number_of_fields; i++ ));
-    do
-    echo -e "Enter field $[i] data "
-    read
-        notValidData=true
-        while $notValidData
+    if ! [[ -f "$table_name" ]]; then
+    sending_output_to_the_user "${ERRORCOLOR}This table does not exist${ENDCOLOR}"
+    else
+        number_of_fields=$(head -1 "$table_name" | awk -F: '{print NF}') 
+        for (( i = 1; i <= number_of_fields; i++ ));
         do
-        check_type=$(check_datatype $table_name $i $REPLY)
-        if [[ "$check_type" == 0 ]]; 
-        then 
-            echo -e "${ERRORCOLOR}Invalid datatype${ENDCOLOR}"
-            echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
-            read
-            else
-                check_size=$(check_for_size $table_name $i $REPLY)
-                if [[ "$check_size" == 0 ]]
-                then
-                    echo -e "${ERRORCOLOR}Invalid dataSize${ENDCOLOR}"
-                    echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
-                    read
+        echo -e "Enter field $[i] data "
+        read
+            notValidData=true
+            while $notValidData
+            do
+            check_type=$(check_datatype $table_name $i $REPLY)
+            if [[ "$check_type" == 0 ]]; 
+            then 
+                echo -e "${ERRORCOLOR}Invalid datatype${ENDCOLOR}"
+                echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+                read
                 else
-                notValidData=false
+                    check_size=$(check_for_size $table_name $i $REPLY)
+                    if [[ "$check_size" == 0 ]]
+                    then
+                        echo -e "${ERRORCOLOR}Invalid dataSize${ENDCOLOR}"
+                        echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+                        read
+                    else
+                    notValidData=false
+                fi
             fi
-        fi
+            done
+            if [[ i -eq $number_of_fields ]] 
+            then
+                echo "$REPLY" >> "$table_name"
+                else
+                echo  -n "$REPLY": >> "$table_name"
+            fi
         done
-        if [[ i -eq $number_of_fields ]] 
-        then
-            echo "$REPLY" >> "$table_name"
-            else
-            echo  -n "$REPLY": >> "$table_name"
-        fi
-    done
-    echo -e "${BABYBLUE}Data inserted successfully${ENDCOLOR}"
-    read
+        echo -e "${BABYBLUE}Data inserted successfully${ENDCOLOR}"
+        read
+    fi
 }
 function update_table 
 {
+    echo "Type table name please"
+    read table_name
+    if ! [[ -f "$table_name" ]]; then
+    sending_output_to_the_user "${ERRORCOLOR}This table does not exist${ENDCOLOR}"
+    else
+        
+    fi
 
 }
 
