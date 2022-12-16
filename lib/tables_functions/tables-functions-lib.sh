@@ -144,12 +144,9 @@ function insert_into_table
             if [[ i -eq $number_of_fields ]] 
             then
                 echo "$REPLY" >> "$table_name"
-                echo -e "\e[42mentry inserted successfully${ENDCOLOR}"
-        else
-            echo -n "$REPLY": >> "$table_name"
-            else
+                else
                 echo  -n "$REPLY": >> "$table_name"
-        fi
+            fi
         done
         echo -e "${BABYBLUE}Data inserted successfully${ENDCOLOR}"
         read
