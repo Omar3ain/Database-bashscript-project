@@ -144,14 +144,11 @@ function insert_into_table
             if [[ i -eq $number_of_fields ]] 
             then
                 echo "$REPLY" >> "$table_name"
-    <<<<<<< HEAD
-            echo -e "\e[42mentry inserted successfully${ENDCOLOR}"
+                echo -e "\e[42mentry inserted successfully${ENDCOLOR}"
         else
             echo -n "$REPLY": >> "$table_name"
-=======
             else
                 echo  -n "$REPLY": >> "$table_name"
-    >>>>>>> 778350af5bb75b10063d7b069297e10870003dbd
         fi
         done
         echo -e "${BABYBLUE}Data inserted successfully${ENDCOLOR}"
@@ -186,7 +183,7 @@ function delete_from_table
                     col=$(awk 'BEGIN{FS="|"}{if(NR==1){for(i=1;i<=NF;i++){if($i=="'$column'") print i}}}' $table_name)
                 if [[ $col == "" ]]
                 then
-                   sending_output_to_the_user "${ERRORCOLOR}Result NOT here${ENDCOLOR}"
+                sending_output_to_the_user "${ERRORCOLOR}Result NOT here${ENDCOLOR}"
                     table_page;
                 else
                     echo -e "Enter Condition Value: "
