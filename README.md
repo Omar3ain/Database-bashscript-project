@@ -6,3 +6,4 @@
 
 ### usefull website
 https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4
+https://www.geeksforgeeks.org/how-to-find-length-of-string-in-bash-script/

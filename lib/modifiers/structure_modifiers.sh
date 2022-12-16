@@ -112,7 +112,8 @@ function check_datatype
 function check_for_size 
 {
     dataSizeCheck=$(head -1 $1 | cut -d ':' -f$2| awk -F "-" 'BEGIN { RS = ":" } {print $3}')
-	if [[ "${#3}" -le $dataSizeCheck ]]; then
+	if [[ "${#3}" -le $dataSizeCheck ]] 
+    then
 		echo 1
 	else
 		echo 0

@@ -75,17 +75,18 @@ function table_fields
             read number_of_columns
         fi
 
-        for (( i = 0; i < number_of_columns; i++ ));
+        for (( i = 1; i <= number_of_columns; i++ ));
         do
-            get_input "Enter column number $[i+1] name" 
+            get_input "Enter column number $[i] name" 
             is_primary_key;
             get_data_size;
             get_data_type;
-            if ! [[ i -eq $number_of_columns-1 ]]
+            if ! [[ i -eq $number_of_columns ]]
             then
             echo -n ":" >> "$table_name"
             fi
         done
+        echo >> "$table_name"
 }
 function drop_table 
 {
@@ -136,10 +137,11 @@ function insert_into_table
             fi
         fi
         done
-        if [[ i -eq $number_of_fields ]]; then
-                echo "$REPLY" >> "$table_name"
+        if [[ i -eq $number_of_fields ]] 
+        then
+            echo "$REPLY" >> "$table_name"
             else
-                echo -n "$REPLY": >> "$table_name"
+            echo  -n "$REPLY": >> "$table_name"
         fi
     done
     echo -e "${BABYBLUE}Data inserted successfully${ENDCOLOR}"
@@ -147,7 +149,7 @@ function insert_into_table
 }
 function update_table 
 {
-    
+
 }
 
 # Select From Table
