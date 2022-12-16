@@ -9,7 +9,7 @@ function table_page_title
 function table_page 
 {
     table_page_title;
-    select choice in "Create Table" "List Tables" "Drop Table" "Insert into Table" "Select From Table" "Delete From Table" "Update Table" "Back"
+    select choice in "Create Table" "List Tables" "Drop Table" "Insert into Table" "Select From Table" "Delete From Table" "Update row in table" "Back"
     do
     case $REPLY in
         1)
@@ -125,25 +125,34 @@ function insert_into_table
             echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
             read
             else
-            notValidData=false
+                check_size=$(check_for_size $table_name $i $REPLY)
+                if [[ "$check_size" == 0 ]]
+                then
+                    echo -e "${ERRORCOLOR}Invalid dataSize${ENDCOLOR}"
+                    echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+                    read
+                else
+                notValidData=false
+            fi
         fi
-        #check for size 
         done
-    if [[ i -eq $number_of_fields ]]; then
-            echo "$REPLY" >> "$table_name"
-        else
-            echo -n "$REPLY": >> "$table_name"
+        if [[ i -eq $number_of_fields ]]; then
+                echo "$REPLY" >> "$table_name"
+            else
+                echo -n "$REPLY": >> "$table_name"
         fi
-        
     done
-echo -e "${BABYBLUE}Data inserted successfully${ENDCOLOR}"
-read
+    echo -e "${BABYBLUE}Data inserted successfully${ENDCOLOR}"
+    read
+}
+function update_table 
+{
+    
 }
 
 # Select From Table
 function select_from_table 
 {
-
     echo -e "Enter Table Name: "
     read dbtable_name
     clear;
