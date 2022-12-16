@@ -119,3 +119,19 @@ function check_for_size
 		echo 0
 	fi
 }
+function isFieldName
+{
+    notFieldName=true
+    while $notFieldName 
+    do
+    read field_name
+    isFieldName=$(head -1 "$1" | awk 'BEGIN{ RS = ":"; FS = "-" } {print $1}'| grep -x -n $field_name | cut -d: -f1)
+    if ! [[ isFieldName ]]; then
+        echo -e "${ERRORCOLOR}That field does not exsist${ENDCOLOR}"
+        echo -e "${ERRORCOLOR}Enter the field name again${ENDCOLOR}"
+    else
+        echo $isFieldName
+        notFieldName=false
+    fi
+    done
+}
