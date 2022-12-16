@@ -9,7 +9,7 @@ function table_page_title
 function table_page 
 {
     table_page_title;
-    select choice in "Create Table" "List Tables" "Drop Table" "Insert into Table" "Select From Table" "Delete From Table" "Update Table" "Back"
+    select choice in "Create Table" "List Tables" "Drop Table" "Insert into Table" "Select From Table" "Delete From Table" "Update row in table" "Back"
     do
     case $REPLY in
         1)
@@ -75,20 +75,19 @@ function table_fields
             read number_of_columns
         fi
 
-        for (( i = 0; i < number_of_columns; i++ ));
+        for (( i = 1; i <= number_of_columns; i++ ));
         do
-            get_input "Enter column number $[i+1] name" 
+            get_input "Enter column number $[i] name" 
             is_primary_key;
             get_data_size;
             get_data_type;
-            if ! [[ i -eq $number_of_columns-1 ]]
+            if ! [[ i -eq $number_of_columns ]]
             then
             echo -n ":" >> "$table_name"
             fi
         done
+        echo >> "$table_name"
 }
-
-# Delete Table
 function drop_table 
 {
     divider;
@@ -114,17 +113,51 @@ function insert_into_table
     echo -e "Type table name please"
     read table_name
     number_of_fields=$(head -1 "$table_name" | awk -F: '{print NF}') 
-    for (( i = 0; i < number_of_fields; i++ ));
+    
+    for (( i = 1; i <= number_of_fields; i++ ));
     do
-     echo -e "Enter field $[i+1] data "
-     read
-     if [[ i -eq $number_of_fields-1 ]]; then
+    echo -e "Enter field $[i] data "
+    read
+        notValidData=true
+        while $notValidData
+        do
+        check_type=$(check_datatype $table_name $i $REPLY)
+        if [[ "$check_type" == 0 ]]; 
+        then 
+            echo -e "${ERRORCOLOR}Invalid datatype${ENDCOLOR}"
+            echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+            read
+            else
+                check_size=$(check_for_size $table_name $i $REPLY)
+                if [[ "$check_size" == 0 ]]
+                then
+                    echo -e "${ERRORCOLOR}Invalid dataSize${ENDCOLOR}"
+                    echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+                    read
+                else
+                notValidData=false
+            fi
+        fi
+        done
+        if [[ i -eq $number_of_fields ]] 
+        then
             echo "$REPLY" >> "$table_name"
+<<<<<<< HEAD
             echo -e "\e[42mentry inserted successfully${ENDCOLOR}"
         else
             echo -n "$REPLY": >> "$table_name"
+=======
+            else
+            echo  -n "$REPLY": >> "$table_name"
+>>>>>>> 778350af5bb75b10063d7b069297e10870003dbd
         fi
     done
+    echo -e "${BABYBLUE}Data inserted successfully${ENDCOLOR}"
+    read
+}
+function update_table 
+{
+
 }
 
 # Select From Table
@@ -132,7 +165,6 @@ function insert_into_table
 # Delete From Table
 function delete_from_table 
 {
-
     echo -e "Enter Table Name: "
     read table_name
         if ! [[ -f "$table_name" ]]

@@ -43,10 +43,12 @@ function is_primary_key
 				echo -e "Is it primary key?"
 				select choice in "Yes" "No"; do
 					if [[ "$REPLY" = "1" || "$REPLY" = "y" ]]; then
-						echo -n "PrimaryKey" >> "$table_name"
+						echo -n "PK" >> "$table_name"
 						echo -n "-" >> "$table_name"
 						notValidData=false
                     elif [[ "$REPLY" = "2" || "$REPLY" = "n" ]]; then
+                        echo -n "NotPK" >> "$table_name"
+						echo -n "-" >> "$table_name"
                         notValidData=false
 					else
 						echo -e "${ERRORCOLOR}invalid input${ENDCOLOR}"
@@ -85,4 +87,35 @@ function get_data_type
                 break
             done
         done
+}
+function check_datatype
+{
+    datatype=$(head -1 $1 | cut -d ':' -f$2| awk -F "-" 'BEGIN { RS = ":" } {print $4}')
+	if [[ "$3" = '' ]]; then
+		echo 1
+	elif [[ "$3" = -?(0) ]]; then
+		echo 0 
+	elif [[ "$3" = ?(-)+([0-9])?(.)*([0-9]) ]]; then
+		if [[ $datatype == integer ]]; then
+			echo 1
+		else
+			echo 0
+		fi
+	else
+		if [[ $datatype == integer ]]; then
+			echo 0 
+		else
+			echo 1
+		fi
+	fi
+}
+function check_for_size 
+{
+    dataSizeCheck=$(head -1 $1 | cut -d ':' -f$2| awk -F "-" 'BEGIN { RS = ":" } {print $3}')
+	if [[ "${#3}" -le $dataSizeCheck ]] 
+    then
+		echo 1
+	else
+		echo 0
+	fi
 }
