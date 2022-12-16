@@ -71,7 +71,7 @@ function table_fields
     echo "Enter number of columns please"
     read number_of_columns
     if ! [[ "$number_of_columns" = +([1-9])*([0-9]) ]]; then
-            echo -e "${ERRORCOLOR}Enter valid number${ENDCOLOR}"
+            echo -e "${ERRORCOLOR}Enter valid number please${ENDCOLOR}"
             read number_of_columns
         fi
 
@@ -92,12 +92,12 @@ function drop_table
 {
     divider;
     echo "enter the name of the table that you want to delete: "
-	read dbtable_name
-	if ! [[ -f "$dbtable_name" ]]; then
+	read table_name
+	if ! [[ -f "$table_name" ]]; then
 		sending_output_to_the_user "${ERRORCOLOR}this table doesn't exist${ENDCOLOR}"
 	else
-		rm "$dbtable_name"
-		sending_output_to_the_user "${BABYBLUE}mtable deleted${ENDCOLOR}"
+		rm "$table_name"
+		sending_output_to_the_user "${BABYBLUE}table deleted${ENDCOLOR}"
 	fi
 }
 function list_tables 
@@ -106,6 +106,8 @@ function list_tables
     ls
     read
 }
+
+# Insert Into Table
 function insert_into_table
 {
     echo "Type table name please"
@@ -142,9 +144,15 @@ function insert_into_table
             if [[ i -eq $number_of_fields ]] 
             then
                 echo "$REPLY" >> "$table_name"
-                else
+    <<<<<<< HEAD
+            echo -e "\e[42mentry inserted successfully${ENDCOLOR}"
+        else
+            echo -n "$REPLY": >> "$table_name"
+=======
+            else
                 echo  -n "$REPLY": >> "$table_name"
-            fi
+    >>>>>>> 778350af5bb75b10063d7b069297e10870003dbd
+        fi
         done
         echo -e "${BABYBLUE}Data inserted successfully${ENDCOLOR}"
         read
@@ -163,18 +171,36 @@ function update_table
 }
 
 # Select From Table
-function select_from_table 
+
+# Delete From Table
+function delete_from_table 
 {
     echo -e "Enter Table Name: "
-    read dbtable_name
-    clear;
-    column -t -s '|' $tName 2>>./.error.log
-        if [[ $? != 0 ]]
-        then
-            echo "${ERRORCOLOR}Error Displaying Table $dbtable_name ${ENDCOLOR}"
+    read table_name
+        if ! [[ -f "$table_name" ]]
+                then
+                    sending_output_to_the_user "${ERRORCOLOR}This Table $table_name NOT here, please try again${ENDCOLOR}"
+                else
+                    echo -e "Enter Condition column name: "
+                    read column
+                    col=$(awk 'BEGIN{FS="|"}{if(NR==1){for(i=1;i<=NF;i++){if($i=="'$column'") print i}}}' $table_name)
+                if [[ $col == "" ]]
+                then
+                   sending_output_to_the_user "${ERRORCOLOR}Result NOT here${ENDCOLOR}"
+                    table_page;
+                else
+                    echo -e "Enter Condition Value: "
+                    read value
+                    result=$(awk 'BEGIN{FS="|"}{if ($'$col'=="'$value'") print $'$col'}' $table_name)
+                if [[ $result == "" ]]
+                then
+                    sending_output_to_the_user "${ERRORCOLOR}Result NOT here${ENDCOLOR}"
+                    table_page;
+                else
+                    Num_Record=$(awk 'BEGIN{FS="|"}{if ($'$col'=="'$value'") print Num_Record}' $table_name 2>>./.error.log)
+                    sed -i ''$Num_Record'd' $table_name
+                    sending_output_to_the_user "${BABYBLUE}Done, Row Deleted${ENDCOLOR}"
+                    table_page;
+                fi
         fi
-        table_page;
-
 }
-
-#delete From Table
