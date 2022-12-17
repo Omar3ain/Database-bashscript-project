@@ -232,3 +232,16 @@ function delete_from_table
                 fi
         fi
 }
+
+function select_from_table 
+{
+    echo -e "Enter Table Name: "
+    read table_name
+        if ! [[ -f "$table_name" ]]
+                then
+                    sending_output_to_the_user "${ERRORCOLOR}This Table $table_name NOT here, please try again${ENDCOLOR}"
+                else
+                divider;
+                cat $table_name
+        fi
+}
