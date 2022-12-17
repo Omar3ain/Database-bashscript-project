@@ -259,7 +259,14 @@ function select_from_table
                 then
                     sending_output_to_the_user "${ERRORCOLOR}This Table $table_name NOT here, please try again${ENDCOLOR}"
                 else
-                divider;
-                cat $table_name
+                    echo enter PK For this table "$(head -1 "$table_name" | cut -d ':' -f1 | awk -F "-" 'BEGIN { RS = ":" } {print $1}')"
+                    read
+                    rec_num=$(cut -d ':' -f1 "$table_name" | sed '1d' | grep -x -n -e "$REPLY" | cut -d':' -f1)
+                        if [[ "$REPLY" == '' ]]
+                            then
+                                sending_output_to_the_user "${ERRORCOLOR}This value NOT here${ENDCOLOR}"
+                                
+                                
+                        fi
         fi
 }
