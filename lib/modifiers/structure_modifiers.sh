@@ -38,24 +38,14 @@ function get_input
 }
 function is_primary_key 
 {
-    notValidData=true
-    while $notValidData; do
-				echo -e "Is it primary key?"
-				select choice in "Yes" "No"; do
-					if [[ "$REPLY" = "1" || "$REPLY" = "y" ]]; then
+					if [[ $1 -eq 1 ]]; then
 						echo -n "PK" >> "$table_name"
 						echo -n "-" >> "$table_name"
-						notValidData=false
-                    elif [[ "$REPLY" = "2" || "$REPLY" = "n" ]]; then
+
+					else
                         echo -n "NotPK" >> "$table_name"
 						echo -n "-" >> "$table_name"
-                        notValidData=false
-					else
-						echo -e "${ERRORCOLOR}invalid input${ENDCOLOR}"
 					fi
-					break
-				done
-			done
 }
 function get_data_size
 {
@@ -122,16 +112,18 @@ function check_for_size
 function isFieldName
 {
     notFieldName=true
+    columns=$(head -1 "$1" | awk 'BEGIN{ RS = ":"; FS = "-" } {print $1}')
     while $notFieldName 
-    do
-    read field_name
-    isFieldName=$(head -1 "$1" | awk 'BEGIN{ RS = ":"; FS = "-" } {print $1}'| grep -x -n $field_name | cut -d: -f1)
-    if ! [[ isFieldName ]]; then
-        echo -e "${ERRORCOLOR}That field does not exsist${ENDCOLOR}"
-        echo -e "${ERRORCOLOR}Enter the field name again${ENDCOLOR}"
-    else
-        echo $isFieldName
-        notFieldName=false
-    fi
+        do
+        read field_name
+        if [[ $(echo "$columns" | grep -x "$field_name") = "" ]]; then
+            echo -e "${ERRORCOLOR}That field does not exsist${ENDCOLOR}"
+            echo -e "${ERRORCOLOR}Enter the field name again${ENDCOLOR}"
+        else
+            isFieldName=$(head -1 "$1" | awk 'BEGIN{ RS = ":"; FS = "-" } {print $1}'| grep -x -n $field_name | cut -d: -f1)
+            export isFieldName
+            notFieldName=false
+        fi
     done
 }
+
