@@ -3,6 +3,8 @@ source lib/modifiers/colors_line_modifiers.sh
 source lib/modifiers/structure_modifiers.sh
 source lib/database_functions/database.functions-lib.sh
 source lib/tables_functions/tables-functions-lib.sh
+source lib/modifiers/print_methods.sh
+
 
 # First_page
 function Main_page_title 
