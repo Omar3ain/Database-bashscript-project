@@ -77,13 +77,17 @@ function table_fields
 
         for (( i = 1; i <= number_of_columns; i++ ));
         do
+            if [[ i -eq 1 ]]; then
+                echo -e "Enter primary column data"
+            fi
             get_input "Enter column number $[i] name" 
-            is_primary_key;
+            is_primary_key $i;
             get_data_size;
             get_data_type;
             if ! [[ i -eq $number_of_columns ]]
             then
             echo -n ":" >> "$table_name"
+            
             fi
         done
         echo >> "$table_name"
@@ -106,8 +110,6 @@ function list_tables
     ls
     read
 }
-
-# Insert Into Table
 function insert_into_table
 {
     echo "Type table name please"
@@ -159,46 +161,58 @@ function update_table
     if ! [[ -f "$table_name" ]]; then
     sending_output_to_the_user "${ERRORCOLOR}This table does not exist${ENDCOLOR}"
     else
-        echo "Type field you want to change please"
-        col=$(isFieldName "$table_name" "$field_name")
+        echo "Type field you want to change its data please"
+        isFieldName "$table_name"
+        col=$isFieldName
+        
         echo "Type row number you want to update please"
         read row
+
         notnumber=true
         while $notnumber 
-        do
-        if ! [[ "$row" = ?(-)+([0-9])?(.)*([0-9]) ]]; then
-        echo "enter number please"
-        read row
-        else
-        notnumber=false
-        fi
+            do
+            if ! [[ "$row" = ?(-)+([0-9])?(.)*([0-9]) ]]; then
+            echo "enter number please"
+            read row 
+            else
+            notnumber=false
+            fi
         done
+        let row=$row+1
+
         echo "enter the new value"
         read new_value
-        notValidData=true
-        
+
+            notValidData=true
             while $notValidData
-            do
-            check_type=$(check_datatype $table_name $col $new_value)
-            if [[ "$check_type" == 0 ]]; 
-            then 
-                echo -e "${ERRORCOLOR}Invalid datatype${ENDCOLOR}"
-                echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
-                read
-                else
-                    check_size=$(check_for_size $table_name $col $new_value)
-                    if [[ "$check_size" == 0 ]]
-                    then
-                        echo -e "${ERRORCOLOR}Invalid dataSize${ENDCOLOR}"
-                        echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
-                        read
-                    else
-                    notValidData=false
+                do
+                if [[ "$new_value" =~ [\$%^\&*():-_+] ]];then
+                    echo -e "${ERRORCOLOR}Cant use speical characters${ENDCOLOR}"
+                    echo -e "${ERRORCOLOR}Enter field data again${ENDCOLOR}"
+                    read new_value
                 fi
-            fi
+                check_type=$(check_datatype $table_name $col $new_value)
+                if [[ "$check_type" == 0 ]]; 
+                then 
+                    echo -e "${ERRORCOLOR}Invalid datatype${ENDCOLOR}"
+                    echo -e "${ERRORCOLOR}Enter field data again${ENDCOLOR}"
+                    read new_value
+                    else
+                        check_size=$(check_for_size $table_name $col $new_value)
+                        if [[ "$check_size" == 0 ]]
+                        then
+                            echo -e "${ERRORCOLOR}Invalid dataSize${ENDCOLOR}"
+                            echo -e "${ERRORCOLOR}Enter field data again${ENDCOLOR}"
+                            read new_value
+                        else
+                        notValidData=false
+                    fi
+                fi
             done
 
         awk -v row=$row -v column=$col -v new_string=$new_value 'BEGIN { FS = OFS = ":" } NR==row{gsub(/.*/,new_string,$column)} 1' $table_name > temp; mv temp $table_name;
+
+        echo -e "${BABYBLUE}Data updated successfully${ENDCOLOR}"
         read
     fi
 
@@ -211,25 +225,29 @@ function delete_from_table
                 then
                     sending_output_to_the_user "${ERRORCOLOR}This Table $table_name NOT here, please try again${ENDCOLOR}"
                 else
-                    echo -e "Enter Condition column name: "
+                    echo -e "Enter column name: "
                     read column
-                    col=$(awk 'BEGIN{FS=":"}{if(NR==1){for(i=1;i<=NF;i++){if($i=="'$column'") print i}}}' $table_name)
-                    if [[ $col == "" ]]
-                    then
+                    #Number of column 
+                    Num_column=$(awk 'BEGIN{FS=":"}{if(NR==1){for(i=1;i<=NF;i++){if($i=="'$column'") print i}}}' $table_name)
+                #column not here           
+            if [[ $Num_column == "" ]]
+                then
+                sending_output_to_the_user "${ERRORCOLOR}Column NOT here${ENDCOLOR}"
+                else
+                    echo -e "Enter column Value: "
+                    read value
+                    value_col=$(awk 'BEGIN{FS=":"}{if ($'$Num_column'=="'$value'") print $'$Num_column'}' $table_name)
+                if [[ $value_col == "" ]]
+                then
                     sending_output_to_the_user "${ERRORCOLOR}Result NOT here${ENDCOLOR}"
-                    else
-                        echo -e "Enter Condition Value: "
-                        read value
-                        result=$(awk 'BEGIN{FS="|"}{if ($'$col'=="'$value'") print $'$col'}' $table_name)
-                        if [[ $result == "" ]]
-                        then
-                            sending_output_to_the_user "${ERRORCOLOR}Result NOT here${ENDCOLOR}"
-                        else
-                            Num_Record=$(awk 'BEGIN{FS="|"}{if ($'$col'=="'$value'") print Num_Record}' $table_name 2>>./.error.log)
-                            sed -i ''$Num_Record'd' $table_name
-                            sending_output_to_the_user "${BABYBLUE}Done, Row Deleted${ENDCOLOR}"
-                        fi
+                else
+                #reach row that i will delete it
+                    Num_Record=$(awk 'BEGIN{FS=":"}{if ($'$Num_column'=="'$value'") print NR}' $table_name 2>>./.error.log)
+                    #delete 
+                    sed -i ''$Num_Record'd' $table_name
+                    sending_output_to_the_user "${BABYBLUE}Done, Row Deleted${ENDCOLOR}"
                 fi
+            fi
         fi
 }
 
