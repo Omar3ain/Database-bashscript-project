@@ -282,8 +282,8 @@ function select_from_table
                             then
                                 sending_output_to_the_user "${ERRORCOLOR}This value NOT here${ENDCOLOR}"
                             else    
-                            let Next_row=$row+1
-                            printTable ":" "$(awk -F ":" '{if(NR == $row) print$0}' $table_name)"
+                            let row=$row+1
+                            printTable ':' "$(awk 'BEGIN{ FS = "-"} {if(NR=='$row') print $0}' $table_name)"
                             read
 
                         fi
