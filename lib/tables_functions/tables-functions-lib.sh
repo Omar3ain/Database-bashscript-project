@@ -9,7 +9,7 @@ function table_page_title
 function table_page 
 {
     table_page_title;
-    select choice in "Create Table" "List Tables" "Drop Table" "Insert into Table" "Select From Table" "Delete From Table" "Update row in table" "Back"
+    select choice in "Create Table" "List Tables" "Drop Table" "Insert into Table" "Select From Table" "Delete From Table" "Update row in table" "Display table" "Back"
     do
     case $REPLY in
         1)
@@ -34,6 +34,9 @@ function table_page
             update_table;
             ;;
         8)
+            display_table;
+            ;;
+        9)
             cd ..
             First_page=false
             database_page=true
@@ -164,7 +167,7 @@ function update_table
         echo "Type field you want to change its data please"
         isFieldName "$table_name"
         col=$isFieldName
-        
+
         echo "Type row number you want to update please"
         read row
 
@@ -249,6 +252,20 @@ function delete_from_table
                 fi
             fi
         fi
+}
+function display_table
+{
+    echo -e "Enter name of table"
+    read table_name
+    if [[ -f "$dbtable" ]]; then
+		echo -e "${ERRORCOLOR}mthis table doesn't exist${ENDCOLOR}"
+		read
+    else
+        echo -e "${BABYBLUE}$table_name table${ENDCOLOR}"
+        printTable ':' "$(cat $table_name)"
+        echo -e "${NEXTLINE}Press enter to continue"
+        read
+    fi
 }
 
 function select_from_table 
