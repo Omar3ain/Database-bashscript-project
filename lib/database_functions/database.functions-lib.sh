@@ -6,7 +6,6 @@ function database_title
     echo -e "${NEXTLINE}"
     divider;
 }
-
 function database_page
 {
     database_title;
@@ -42,8 +41,6 @@ function database_page
     break
     done
 }
-
-# Create Database
 function CreateDB 
 {
     echo -e "Enter the name of the database please"
@@ -65,8 +62,6 @@ function CreateDB
 		sending_output_to_the_user "${ERRORCOLOR}Database name can't start with numbers or special characters${ENDCOLOR}"
 	fi
 }
-
-# Delete Database
 function DropDB 
 {
     divider;    
@@ -82,8 +77,6 @@ function DropDB
                 sending_output_to_the_user "${BABYBLUE}$dbName Removed from your databases${ENDCOLOR}"
         fi
 }
-
-# Select Database
 function SelectDB 
 {
     divider;
@@ -99,8 +92,6 @@ function SelectDB
                 create_table_page=true
         fi
 }
-
-# List_Database
 function List_databases
 {
     divider;
