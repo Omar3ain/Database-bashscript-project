@@ -81,9 +81,10 @@ function table_fields
         for (( i = 1; i <= number_of_columns; i++ ));
         do
             if [[ i -eq 1 ]]; then
-                echo -e "Enter primary column data"
+                get_input "Enter primary column data"
+            else
+                get_input "Enter column number $[i] name" 
             fi
-            get_input "Enter column number $[i] name" 
             is_primary_key $i;
             get_data_size;
             get_data_type;
@@ -125,6 +126,20 @@ function insert_into_table
         do
         echo -e "Enter field $[i] data "
         read
+        if [[ i -eq 1 ]]; then
+            usedPrimaryKey=true
+            while $usedPrimaryKey
+            do
+                primarynumber=$(cut -d ':' -f1 $table_name | awk '{if(NR != 1) print $0}' | grep -x -e "$REPLY") 
+                if ! [[ "$primarynumber" == '' ]]; then
+                    echo -e "${ERRORCOLOR}Used primary number${ENDCOLOR}"
+                    read
+                else
+                    usedPrimaryKey=false
+                fi
+            done
+        fi
+
             notValidData=true
             while $notValidData
             do
@@ -140,6 +155,7 @@ function insert_into_table
                     then
                         echo -e "${ERRORCOLOR}Invalid dataSize${ENDCOLOR}"
                         echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+                        validData "$REPLY"
                         read
                     else
                     notValidData=false
@@ -256,8 +272,11 @@ function display_table
 {
     echo -e "Enter name of table"
     read table_name
-    if [[ -f "$dbtable" ]]; then
-		echo -e "${ERRORCOLOR}mthis table doesn't exist${ENDCOLOR}"
+    if ! [[ -f "$table_name" ]]; then
+		echo -e "${ERRORCOLOR}This table doesn't exist${ENDCOLOR}"
+		read
+    elif [[ $table_name = "" ]];then
+        echo -e "${ERRORCOLOR}Enter the name of table please${ENDCOLOR}"
 		read
     else
         echo -e "${BABYBLUE}$table_name table${ENDCOLOR}"

@@ -32,9 +32,20 @@ function get_input
             echo -n "-" >> "$table_name"
             notValidData=false
         else
-            echo -e "\e[41mfield name can't start with numbers or special characters\e[0m"
+            echo -e "${ERRORCOLOR}field name can't start with numbers or special characters${ENDCOLOR}"
         fi
     done
+}
+function validData
+{
+    if [[ $1 = "" ]]; 
+        then
+            echo -e "${ERRORCOLOR}Invalid Input, please enter a valid one${ENDCOLOR}"
+            read
+        elif [[ $1 =~ [/.:\|\-] ]]; then
+            echo -e "${ERRORCOLOR}You can't enter these characters => . / : - | ${ENDCOLOR}"
+            read
+        fi
 }
 function is_primary_key 
 {
