@@ -230,27 +230,23 @@ function delete_from_table
                 else
                     echo -e "Enter column name: "
                     read column
-                    #Number of column 
-                    Num_column=$(awk 'BEGIN{FS=":"}{if(NR==1){for(i=1;i<=NF;i++){if($i=="'$column'") print i}}}' $table_name)
-                #column not here           
-            if [[ $Num_column == "" ]]
-                then
-                sending_output_to_the_user "${ERRORCOLOR}Column NOT here${ENDCOLOR}"
-                else
-                    echo -e "Enter column Value: "
-                    read value
-                    value_col=$(awk 'BEGIN{FS=":"}{if ($'$Num_column'=="'$value'") print $'$Num_column'}' $table_name)
-                if [[ $value_col == "" ]]
-                then
-                    sending_output_to_the_user "${ERRORCOLOR}Result NOT here${ENDCOLOR}"
-                else
-                #reach row that i will delete it
-                    Num_Record=$(awk 'BEGIN{FS=":"}{if ($'$Num_column'=="'$value'") print NR}' $table_name 2>>./.error.log)
-                    #delete 
-                    sed -i ''$Num_Record'd' $table_name
-                    sending_output_to_the_user "${BABYBLUE}Done, Row Deleted${ENDCOLOR}"
-                fi
-            fi
+                    Num_column=$(awk -F : 'BEGIN{FS="-"}{if(NR==1){for(i=1;i<=NF;i++){if($i=="'$column'") print i}}}' $table_name)   
+                        if [[ $Num_column == "" ]]
+                        then
+                            sending_output_to_the_user "${ERRORCOLOR}Column NOT here${ENDCOLOR}"
+                        else
+                            echo -e "Enter column Value: "
+                            read value
+                            value_col=$(awk 'BEGIN{FS=":"}{if ($'$Num_column'=="'$value'") print $'$Num_column'}' $table_name)
+                                if [[ $value_col == "" ]]
+                                then
+                                    sending_output_to_the_user "${ERRORCOLOR}Result NOT here${ENDCOLOR}"
+                                else
+                                        Num_Record=$(awk 'BEGIN{FS=":"}{if ($'$Num_column'=="'$value'") print NR}' $table_name 2>>./.error.log) 
+                                        sed -i ''$Num_Record'd' $table_name
+                                        sending_output_to_the_user "${BABYBLUE}Done, Row Deleted${ENDCOLOR}"
+                                fi
+                        fi
         fi
 }
 function display_table
