@@ -1,6 +1,6 @@
 function divider 
 {
-    echo -e "${NEXTLINE}+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++${NEXTLINE}"
+    echo -e "**************************************************************************"
 }
 function invalid_list_input_handle
 {
@@ -11,7 +11,7 @@ function invalid_list_input_handle
 function sending_output_to_the_user 
 {
     echo -e $1
-    echo press any key
+    echo "Press any key to continue"
     read  
 }
 function get_input
@@ -52,7 +52,6 @@ function is_primary_key
 					if [[ $1 -eq 1 ]]; then
 						echo -n "PK" >> "$table_name"
 						echo -n "-" >> "$table_name"
-
 					else
                         echo -n "NotPK" >> "$table_name"
 						echo -n "-" >> "$table_name"
@@ -75,6 +74,9 @@ function get_data_size
 }
 function get_data_type
 {
+    if [[ $1 -eq 1 ]]; then
+	echo -n "integer" >> "$table_name"
+    else
     notValidData=true
     while $notValidData; do
             echo -e "Enter column type"
@@ -88,6 +90,9 @@ function get_data_type
                 break
             done
         done
+    fi
+    
+
 }
 function check_datatype
 {

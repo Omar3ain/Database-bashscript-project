@@ -1,10 +1,15 @@
 function database_title
 {
-    divider;
-    echo -e "${NEXTLINE}"
-    echo -e "${TAB}${TAB}${TAB}${LIGHTGREY}${BLACK}Welcome to database page${ENDCOLOR}"
-    echo -e "${NEXTLINE}"
-    divider;
+    echo -e "${LIGHTGREY}${BLACK}--------------------------------------------------------------------------${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                       WELCOME TO DATABASES PAGE                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"  
+    echo -e "${LIGHTGREY}${BLACK}--------------------------------------------------------------------------${ENDCOLOR}"
+    echo
 }
 function database_page
 {

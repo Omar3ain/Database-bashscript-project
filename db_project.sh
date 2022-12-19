@@ -9,16 +9,20 @@ source lib/modifiers/print_methods.sh
 # First_page
 function Main_page_title 
 {
-    divider;
-    echo -e "${TAB}${LIGHTGREY}${BLACK}Bash shell Script project - DBMS Clone${ENDCOLOR}"
-    echo -e "${TAB}${LIGHTGREY}${BLACK}Open source Applictions development - intake 430${ENDCOLOR}"
-    echo -e "${TAB}${LIGHTGREY}${BLACK}Omar medhat abdelfattah - Montanser hassan${TAB}${ENDCOLOR}"
-    divider;
+    echo -e "${LIGHTGREY}${BLACK}--------------------------------------------------------------------------${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                 Bash shell Script project - DBMS Clone                 |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|             Open source Applictions development - intake 43            |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|               Omar medhat abdelfattah - Montanser hassan               |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}--------------------------------------------------------------------------${ENDCOLOR}"
+    echo
 }
 function First_page
 {
     Main_page_title;
-    echo `pwd`
     select choice in "Create or enter database" "Exit"
     do
     case $REPLY in

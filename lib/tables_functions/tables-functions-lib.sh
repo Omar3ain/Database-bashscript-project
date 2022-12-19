@@ -1,10 +1,15 @@
 function table_page_title
 {
-    divider;
-    echo -e "${NEXTLINE}"
-    echo -e "${TAB}${TAB}${LIGHTGREY}${BLACK}Welcome to tables page of database '${dbName}' ${ENDCOLOR}"
-    echo -e "${NEXTLINE}"
-    divider;
+    echo -e "${LIGHTGREY}${BLACK}--------------------------------------------------------------------------${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|              WELCOME TO TABLES PAGE OF DATABASE '${dbName}'             |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"  
+    echo -e "${LIGHTGREY}${BLACK}--------------------------------------------------------------------------${ENDCOLOR}"
+    echo
 } 
 function table_page 
 {
@@ -73,21 +78,25 @@ function table_fields
 {
     echo "Enter number of columns please"
     read number_of_columns
-    if ! [[ "$number_of_columns" = +([1-9])*([0-9]) ]]; then
+        if ! [[ "$number_of_columns" = +([1-9])*([0-9]) ]]; then
             echo -e "${ERRORCOLOR}Enter valid number please${ENDCOLOR}"
+            read number_of_columns
+        elif [[ "$number_of_columns" -gt 25 ]]; then
+            echo -e "${ERRORCOLOR}Can't be that big number of columns${ENDCOLOR}"
             read number_of_columns
         fi
 
         for (( i = 1; i <= number_of_columns; i++ ));
         do
             if [[ i -eq 1 ]]; then
-                get_input "Enter primary column data"
+                get_input "Enter primary column name of type integer:"
             else
-                get_input "Enter column number $[i] name" 
+                get_input "Enter column number $[i] name:" 
             fi
             is_primary_key $i;
             get_data_size;
-            get_data_type;
+            get_data_type $i;
+            
             if ! [[ i -eq $number_of_columns ]]
             then
             echo -n ":" >> "$table_name"
@@ -125,43 +134,33 @@ function insert_into_table
         for (( i = 1; i <= number_of_fields; i++ ));
         do
         echo -e "Enter field $[i] data "
-        read
-        if [[ i -eq 1 ]]; then
-            usedPrimaryKey=true
-            while $usedPrimaryKey
-            do
-                primarynumber=$(cut -d ':' -f1 $table_name | awk '{if(NR != 1) print $0}' | grep -x -e "$REPLY") 
-                if ! [[ "$primarynumber" == '' ]]; then
-                    echo -e "${ERRORCOLOR}Used primary number${ENDCOLOR}"
-                    read
-                else
-                    usedPrimaryKey=false
-                fi
-            done
-        fi
+
 
             notValidData=true
             while $notValidData
             do
+            read
             check_type=$(check_datatype $table_name $i $REPLY)
-            if [[ "$check_type" == 0 ]]; 
-            then 
+            check_size=$(check_for_size $table_name $i $REPLY)
+            primarynumber=$(cut -d ':' -f1 $table_name | awk '{if(NR != 1) print $0}' | grep -x -e "$REPLY") 
+            if [[ "$check_type" == 0 ]];then
                 echo -e "${ERRORCOLOR}Invalid datatype${ENDCOLOR}"
                 echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
-                read
-                else
-                    check_size=$(check_for_size $table_name $i $REPLY)
-                    if [[ "$check_size" == 0 ]]
-                    then
-                        echo -e "${ERRORCOLOR}Invalid dataSize${ENDCOLOR}"
-                        echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
-                        validData "$REPLY"
-                        read
-                    else
-                    notValidData=false
-                fi
+            elif [[ "$check_size" == 0 ]];then
+                echo -e "${ERRORCOLOR}Invalid dataSize${ENDCOLOR}"
+                echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+            elif [[ $REPLY =~ [/.:\|\-] ]];then
+                echo -e "${ERRORCOLOR}Invalid input${ENDCOLOR}"
+                echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+            elif [[ "$REPLY" == '' ]] || ! [[ "$primarynumber" == '' ]];then
+                echo -e "${ERRORCOLOR}Invalid input${ENDCOLOR}"
+                echo -e "${ERRORCOLOR}Either you entered blank input or used Primary key${ENDCOLOR}"
+                echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+            else
+            notValidData=false
             fi
             done
+
             if [[ i -eq $number_of_fields ]] 
             then
                 echo "$REPLY" >> "$table_name"
@@ -244,27 +243,20 @@ function delete_from_table
         then
             sending_output_to_the_user "${ERRORCOLOR}This Table $table_name NOT here, please try again${ENDCOLOR}"
         else
-            echo -e "Enter column name: "
-            isFieldName "$table_name"
-            col=$isFieldName 
-            if [[ $col == "" ]]
-            then
-                sending_output_to_the_user "${ERRORCOLOR}Column NOT here${ENDCOLOR}"
-            else
-                echo -e "Enter column Value: "
+                echo -e "Enter primary key column Value: "
                 read value
-                value_col=$(awk 'BEGIN{FS=":"}{if ($'$col'=="'$value'") print $'$col'}' $table_name)
-                if [[ $value_col == "" ]]
+                if [[ $value == "" ]]
                 then
                     sending_output_to_the_user "${ERRORCOLOR}Result NOT here${ENDCOLOR}"
+                elif ! [[ "$value" = ?(-)+([0-9])?(.)*([0-9]) ]]; then
+                    sending_output_to_the_user "${ERRORCOLOR}Must be number ${ENDCOLOR}"
                 else
-                    Num_Record=$(awk 'BEGIN{FS=":"}{if ($'$col'=="'$value'") print NR}' $table_name 2>>./.error.log) 
+                    Num_Record=$(awk 'BEGIN{FS=":"}{if ($1=="'$value'") print NR}' $table_name 2>>./.error.log) 
                     if ! [[ $Num_Record -eq 1 ]]
                     then
                         sed -i "${Num_Record}d" "$table_name"
                         sending_output_to_the_user "${BABYBLUE}Done, Row Deleted${ENDCOLOR}"
                     fi
-                fi
             fi
         fi
 }
