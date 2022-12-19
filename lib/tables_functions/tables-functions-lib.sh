@@ -159,7 +159,8 @@ function insert_into_table
             elif [[ $REPLY =~ [/.:\|\-] ]];then
                 echo -e "${ERRORCOLOR}Invalid input${ENDCOLOR}"
                 echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
-            elif [[ "$REPLY" == '' ]] || ! [[ "$primarynumber" == '' ]] || [[ "$REPLY" =~ ^" " ]];then
+            elif [[ "$REPLY" == '' ]] || ! [[ "$primarynumber" == '' ]] || [[ "$REPLY" =~ ^" " ]] || [[ $i -eq 1 && "$REPLY" =~ " " ]] ;then
+            
                 echo -e "${ERRORCOLOR}Invalid input${ENDCOLOR}"
                 echo -e "${ERRORCOLOR}Either you entered blank input or used Primary key${ENDCOLOR}"
                 echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
@@ -223,7 +224,7 @@ function update_table
             elif [[ $REPLY =~ [/.:\|\-] ]];then
                 echo -e "${ERRORCOLOR}Invalid input${ENDCOLOR}"
                 echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
-            elif [[ "$REPLY" == '' ]] || ! [[ "$primarynumber" == '' ]] || [[ "$REPLY" =~ ^" " ]];then
+            elif [[ "$REPLY" == '' ]] || ! [[ "$primarynumber" == '' ]] || [[ "$REPLY" =~ ^" " ]] || [[ $i -eq 1 && "$REPLY" =~ " " ]] ;then
                 echo -e "${ERRORCOLOR}Invalid input${ENDCOLOR}"
                 echo -e "${ERRORCOLOR}Either you entered blank input or used Primary key${ENDCOLOR}"
                 echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
