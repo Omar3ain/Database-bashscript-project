@@ -1,3 +1,4 @@
+#!/bin/bash
 function database_title
 {
     echo -e "${LIGHTGREY}${BLACK}--------------------------------------------------------------------------${ENDCOLOR}"

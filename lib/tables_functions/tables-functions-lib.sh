@@ -1,3 +1,4 @@
+#!/bin/bash
 function table_page_title
 {
     echo -e "${LIGHTGREY}${BLACK}--------------------------------------------------------------------------${ENDCOLOR}"

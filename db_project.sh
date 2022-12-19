@@ -9,14 +9,23 @@ source lib/modifiers/print_methods.sh
 # First_page
 function Main_page_title 
 {
+    tput bold
     echo -e "${LIGHTGREY}${BLACK}--------------------------------------------------------------------------${ENDCOLOR}"
+    tput bold
     echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    tput bold
     echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
-    echo -e "${LIGHTGREY}${BLACK}|                 Bash shell Script project - DBMS Clone                 |${ENDCOLOR}"
-    echo -e "${LIGHTGREY}${BLACK}|             Open source Applictions development - intake 43            |${ENDCOLOR}"
+    tput bold
+    echo -e "${LIGHTGREY}${BLACK}|                    Bash shell Script project - DBMS                    |${ENDCOLOR}"
+    tput bold
+    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    tput bold
     echo -e "${LIGHTGREY}${BLACK}|               Omar medhat abdelfattah - Montanser hassan               |${ENDCOLOR}"
+    tput bold
     echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    tput bold
     echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    tput bold
     echo -e "${LIGHTGREY}${BLACK}--------------------------------------------------------------------------${ENDCOLOR}"
     echo
 }
