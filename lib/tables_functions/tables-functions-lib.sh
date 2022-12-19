@@ -132,8 +132,10 @@ function list_tables
 }
 function insert_into_table
 {
-    echo "Type table name please"
-    read table_name
+    table_name=$(zenity --entry \
+       --width 500 \
+       --title "Table name" \
+       --text "Enter the table name please");
     if ! [[ -f "$table_name" ]]; then
     sending_output_to_the_user "${ERRORCOLOR}This table does not exist${ENDCOLOR}"
     else
@@ -181,8 +183,10 @@ function insert_into_table
 }
 function update_table 
 {
-    echo "Type table name please"
-    read table_name
+    table_name=$(zenity --entry \
+       --width 500 \
+       --title "Table name" \
+       --text "Enter the table name please");
     if ! [[ -f "$table_name" ]]; then
     sending_output_to_the_user "${ERRORCOLOR}This table does not exist${ENDCOLOR}"
     else
