@@ -153,7 +153,7 @@ function insert_into_table
             elif [[ $REPLY =~ [/.:\|\-] ]];then
                 echo -e "${ERRORCOLOR}Invalid input${ENDCOLOR}"
                 echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
-            elif [[ "$REPLY" == '' ]] || ! [[ "$primarynumber" == '' ]];then
+            elif [[ "$REPLY" == '' ]] || ! [[ "$primarynumber" == '' ]] || [[ "$REPLY" =~ ^" " ]];then
                 echo -e "${ERRORCOLOR}Invalid input${ENDCOLOR}"
                 echo -e "${ERRORCOLOR}Either you entered blank input or used Primary key${ENDCOLOR}"
                 echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
@@ -190,46 +190,43 @@ function update_table
         notnumber=true
         while $notnumber 
             do
-            if ! [[ "$row" = ?(-)+([0-9])?(.)*([0-9]) ]]; then
-            echo "enter number please"
-            read row 
-            else
+            if [[ $row =~ ^[0-9]+$ ]]; then
             notnumber=false
+            else
+            echo -e "${ERRORCOLOR}enter number please${ENDCOLOR}"
+            read row 
             fi
         done
         let row=$row+1
 
         echo "enter the new value"
-        read new_value
 
             notValidData=true
             while $notValidData
-                do
-                if [[ "$new_value" =~ [\$%^\&*():-_+] ]];then
-                    echo -e "${ERRORCOLOR}Cant use speical characters${ENDCOLOR}"
-                    echo -e "${ERRORCOLOR}Enter field data again${ENDCOLOR}"
-                    read new_value
-                fi
-                check_type=$(check_datatype $table_name $col $new_value)
-                if [[ "$check_type" == 0 ]]; 
-                then 
-                    echo -e "${ERRORCOLOR}Invalid datatype${ENDCOLOR}"
-                    echo -e "${ERRORCOLOR}Enter field data again${ENDCOLOR}"
-                    read new_value
-                    else
-                        check_size=$(check_for_size $table_name $col $new_value)
-                        if [[ "$check_size" == 0 ]]
-                        then
-                            echo -e "${ERRORCOLOR}Invalid dataSize${ENDCOLOR}"
-                            echo -e "${ERRORCOLOR}Enter field data again${ENDCOLOR}"
-                            read new_value
-                        else
-                        notValidData=false
-                    fi
-                fi
+            do
+            read
+            check_type=$(check_datatype $table_name $col $REPLY)
+            check_size=$(check_for_size $table_name $col $REPLY)
+            primarynumber=$(cut -d ':' -f1 $table_name | awk '{if(NR != 1) print $0}' | grep -x -e "$REPLY") 
+            if [[ "$check_type" == 0 ]];then
+                echo -e "${ERRORCOLOR}Invalid datatype${ENDCOLOR}"
+                echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+            elif [[ "$check_size" == 0 ]];then
+                echo -e "${ERRORCOLOR}Invalid dataSize${ENDCOLOR}"
+                echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+            elif [[ $REPLY =~ [/.:\|\-] ]];then
+                echo -e "${ERRORCOLOR}Invalid input${ENDCOLOR}"
+                echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+            elif [[ "$REPLY" == '' ]] || ! [[ "$primarynumber" == '' ]] || [[ "$REPLY" =~ ^" " ]];then
+                echo -e "${ERRORCOLOR}Invalid input${ENDCOLOR}"
+                echo -e "${ERRORCOLOR}Either you entered blank input or used Primary key${ENDCOLOR}"
+                echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+            else
+            notValidData=false
+            fi
             done
 
-        awk -v row=$row -v column=$col -v new_string=$new_value 'BEGIN { FS = OFS = ":" } NR==row{gsub(/.*/,new_string,$column)} 1' $table_name > temp; mv temp $table_name;
+        awk -v row=$row -v column=$col -v new_string=$REPLY 'BEGIN { FS = OFS = ":" } NR==row{gsub(/.*/,new_string,$column)} 1' $table_name > temp; mv temp $table_name;
 
         echo -e "${BABYBLUE}Data updated successfully${ENDCOLOR}"
         read
