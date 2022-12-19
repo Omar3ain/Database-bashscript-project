@@ -176,8 +176,7 @@ function insert_into_table
                 echo  -n "$REPLY": >> "$table_name"
             fi
         done
-        echo -e "${BABYBLUE}Data inserted successfully${ENDCOLOR}"
-        read
+        zenity --info --title="Data inserted successfully" --text="Press ok to continue" --no-wrap --width 600--height 200
     fi
 }
 function update_table 
@@ -235,8 +234,7 @@ function update_table
 
         awk -v row=$row -v column=$col -v new_string=$REPLY 'BEGIN { FS = OFS = ":" } NR==row{gsub(/.*/,new_string,$column)} 1' $table_name > temp; mv temp $table_name;
 
-        echo -e "${BABYBLUE}Data updated successfully${ENDCOLOR}"
-        read
+         zenity --info --title="Data Updated successfully" --text="Press ok to continue" --no-wrap --width 600--height 200
     fi
 
 }
