@@ -68,6 +68,12 @@ function create_table
     elif [[ $table_name =~ [/] ]] 
         then
             sending_output_to_the_user "${ERRORCOLOR}Can't use / in naming the table${ENDCOLOR}"
+    elif [[ $table_name =~ [.:\|\-] ]] 
+        then
+            sending_output_to_the_user "${ERRORCOLOR}Can't use special character in naming the table${ENDCOLOR}"
+    elif [[ $table_name =~ [1-9] ]] 
+        then
+            sending_output_to_the_user "${ERRORCOLOR}Can't use Numbers in naming the table${ENDCOLOR}"        
 	elif [[ $table_name =~ ^[a-zA-Z] ]] 
         then
             touch $table_name
@@ -248,7 +254,7 @@ function delete_from_table
                 read value
                 if [[ $value == "" ]]
                 then
-                    sending_output_to_the_user "${ERRORCOLOR}Result NOT here${ENDCOLOR}"
+                    sending_output_to_the_user "${ERRORCOLOR}Result $value NOT here${ENDCOLOR}"
                 elif ! [[ "$value" = ?(-)+([0-9])?(.)*([0-9]) ]]; then
                     sending_output_to_the_user "${ERRORCOLOR}Must be number ${ENDCOLOR}"
                 else
