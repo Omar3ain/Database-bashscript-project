@@ -1,15 +1,15 @@
 #!/bin/bash
 function table_page_title
 {
-    echo -e "${LIGHTGREY}${BLACK}--------------------------------------------------------------------------${ENDCOLOR}"
-    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
-    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
-    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
-    echo -e "${LIGHTGREY}${BLACK}|              WELCOME TO TABLES PAGE OF DATABASE '${dbName}'             |${ENDCOLOR}"
-    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
-    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
-    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"  
-    echo -e "${LIGHTGREY}${BLACK}--------------------------------------------------------------------------${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}----------------------------------------------------------------------------------------${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                    WELCOME TO TABLES PAGE OF DATABASE '${dbName}'                     |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"  
+    echo -e "${LIGHTGREY}${BLACK}----------------------------------------------------------------------------------------${ENDCOLOR}"
     echo
 } 
 function table_page 
