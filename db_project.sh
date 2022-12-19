@@ -10,23 +10,23 @@ source lib/modifiers/print_methods.sh
 function Main_page_title 
 {
     tput bold
-    echo -e "${LIGHTGREY}${BLACK}--------------------------------------------------------------------------${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}----------------------------------------------------------------------------------------${ENDCOLOR}"
     tput bold
-    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
     tput bold
-    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
     tput bold
-    echo -e "${LIGHTGREY}${BLACK}|                    Bash shell Script project - DBMS                    |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                           Bash shell Script project - DBMS                           |${ENDCOLOR}"
     tput bold
-    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
     tput bold
-    echo -e "${LIGHTGREY}${BLACK}|               Omar medhat abdelfattah - Montanser hassan               |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                      Omar medhat abdelfattah - Montanser hassan                      |${ENDCOLOR}"
     tput bold
-    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
     tput bold
-    echo -e "${LIGHTGREY}${BLACK}|                                                                        |${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
     tput bold
-    echo -e "${LIGHTGREY}${BLACK}--------------------------------------------------------------------------${ENDCOLOR}"
+    echo -e "${LIGHTGREY}${BLACK}----------------------------------------------------------------------------------------${ENDCOLOR}"
     echo
 }
 function First_page
