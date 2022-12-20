@@ -75,6 +75,9 @@ function get_data_type
     if [[ $1 -eq 1 ]]; then
 	echo -n "integer" >> "$table_name"
     else
+    notValidData=true
+    while $notValidData;
+    do
         asnwer=$(zenity --list \
                     --title="Table data" \
                     --text "What is the datatype of that column ?" \
@@ -83,8 +86,13 @@ function get_data_type
                     --column "Answer" \
                     FALSE "integer" \
                     FALSE "string");
+                    if [[ $asnwer == '' ]];then
+                    sending_error "Must enter datatype"
+                    else
                     echo -n "$asnwer" >> "$table_name"
                     notValidData=false
+                    fi
+                done
     fi
     
 

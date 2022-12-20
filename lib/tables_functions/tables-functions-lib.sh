@@ -164,7 +164,7 @@ function insert_into_table
             notValidData=true
             while $notValidData
             do
-            READ=$(get_input_gui "Enter field $[i] data:")
+            READ=$(get_input_gui "Data entry" "Enter field $[i] data:")
             check_type=$(check_datatype $table_name $i $READ)
             check_size=$(check_for_size $table_name $i $READ)
             primarynumber=$(cut -d ':' -f1 $table_name | awk '{if(NR != 1) print $0}' | grep -x -e "$READ") 
@@ -211,7 +211,7 @@ function update_table
         notnumber=true
         while $notnumber 
             do
-            row=$(get_input_gui "Type row number you want to update please")
+            row=$(get_input_gui "Update table" "Type row number you want to update please")
             if [[ $row =~ ^[0-9]+$ ]]; then
             notnumber=false
             else
@@ -224,7 +224,7 @@ function update_table
             notValidData=true
             while $notValidData
             do
-            READ=$(get_input_gui "enter the new value")
+            READ=$(get_input_gui "Update table" "enter the new value")
             check_type=$(check_datatype $table_name $col $READ)
             check_size=$(check_for_size $table_name $col $READ)
             primarynumber=$(cut -d ':' -f1 $table_name | awk '{if(NR != 1) print $0}' | grep -x -e "$READ") 
@@ -257,7 +257,7 @@ function delete_from_table
         if ! [[ "$ret" == 0 ]] || [[ "$table_name" == '' ]]; then
             return
         fi
-                value=$(get_input_gui "Enter primary key column Value: ");
+                value=$(get_input_gui "Delete from table" "Enter primary key column Value: ");
                 
                 if [[ $value == "" ]]
                 then
@@ -298,7 +298,7 @@ function select_from_table
             if ! [[ "$ret" == 0 ]] || [[ "$table_name" == '' ]]; then
                 return
             fi
-            row=$(get_input_gui "Enter Number of ROW That You want to Select it: ")
+            row=$(get_input_gui "Select from table" "Enter Number of ROW That You want to Select it: ")
             if [[ "$row" == '' || "$row" == 0 ]]
             then
                 sending_error "This value NOT here"

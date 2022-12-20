@@ -49,10 +49,7 @@ function database_page
 }
 function CreateDB 
 {
-    dbName=$(zenity --entry \
-       --width 500 \
-       --title "Table name" \
-       --text "Enter the Database name please");
+    dbName=$( get_input_gui "Database name" "Enter the Database name please");
 	if [[ $dbName = "" ]]
         then
             sending_error "Can't create a database without a name"
@@ -65,51 +62,64 @@ function CreateDB
             cd "./$dbName" > /dev/null 2>&1
             database_page=false
             create_table_page=true
-            sending_output_to_the_user "${BABYBLUE}Database created sucessfully${ENDCOLOR}"
-            
+            notify-send "Database status" "Database Created successfully."
 	else
 		make_warning_gui "Warning Input" "Database name can't start with numbers or special characters"
 	fi
 }
 function DropDB 
 {
-    divider;    
-
-    dbName=$(zenity --entry \
-       --width 500 \
-       --title "Table name" \
-       --text "Enter the Database name please");
-        db="$dbName"
-        if [[ "$dbName" = '' ]]; then
-                sending_error "Can't delete a database without a name"
-        elif ! [[ -d "$dbName" ]]; then
-                sending_error "This database doesn't exist"    
+     if [ -z "$(ls -A . )" ]; then
+        make_warning_gui "Warning" "No Databases available"
         else
-                rm -r "./$dbName"
-                sending_output_to_the_user "$dbName Removed from your databases"
+        dbName=$(zenity --title="Databases available" --text="" --list --column="Databases" $(ls))
+        ret=$?
+        if ! [[ "$ret" == 0 ]] || [[ "$ dbName" == '' ]]; then
+            return
+        fi
+        if zenity --question --title="Confirm deletion" --text="Are you sure you want to delete this database ("$dbName")?" --no-wrap 
+        then
+        rm -r "$dbName"
+		notify-send "Database status" "Database removed successfully."
+        fi
         fi
 }
 function SelectDB 
 {
-    divider;
-    dbName=$(zenity --entry \
-       --width 500 \
-       --title "Table name" \
-       --text "Enter the Database name please");
-        if [[ "$dbName" = '' ]]; then
-				make_warning_gui "Warning Input" "please enter a correct name then click enter, Don't try this character again."
-        elif ! [[ -d "$dbName" ]]; then
-				sending_error "This database_name doesn't exist."
+     if [ -z "$(ls -A . )" ]; then
+        make_warning_gui "Warning" "No Databases available"
         else
-                cd "$dbName"
-                database_page=false
-                create_table_page=true
+        dbName=$(zenity --title="Databases available" --text="" --list --column="Databases" $(ls))
+        ret=$?
+        if ! [[ "$ret" == 0 ]] || [[ "$ dbName" == '' ]]; then
+            return
+        fi
+            (
+                echo 10
+                echo "# Reading User Input"
+                sleep 1
+
+                echo 15
+                echo "# Reading database tables"
+                sleep 1
+
+                echo 70
+                echo "# Installing tables..."
+                sleep 1
+
+                echo 100
+                echo "# database loading completed!"
+                ) | zenity --title "Database Loading Progress Bar" --progress --auto-close --width="600"
+            cd "$dbName"
+            database_page=false
+            create_table_page=true
         fi
 }
 function List_databases
 {
-    divider;
-    echo -e "${BABYBLUE}The list of all avaliable databases:${ENDCOLOR}";
-    ls;
-    read
+    if [ -z "$(ls -A . )" ]; then
+        make_warning_gui "Warning" "No Databases available"
+        else
+        zenity --title="Database available" --text="" --list --column="Databases" $(ls)
+        fi
 }
