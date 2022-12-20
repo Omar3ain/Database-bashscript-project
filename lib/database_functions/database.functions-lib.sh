@@ -31,7 +31,14 @@ function database_page
             DropDB
             ;;
         5)
-            Back
+                (
+                echo 10
+                echo "# Back to Main page"
+                sleep 2
+
+                echo 100
+                echo "# main page loading completed!"
+                ) | zenity --title "Main page Loading Progress Bar" --progress --auto-close --width="600"
             cd ..
             First_page=true
             database_page=false
@@ -58,6 +65,22 @@ function CreateDB
             sending_error "This database name is already exsists"
 	elif [[ $dbName =~ ^[a-zA-Z] ]] 
         then
+            (
+                echo 10
+                echo "# Reading User Input"
+                sleep 1
+
+                echo 15
+                echo "# Reading database tables"
+                sleep 1
+
+                echo 70
+                echo "# Installing tables..."
+                sleep 1
+
+                echo 100
+                echo "# database loading completed!"
+                ) | zenity --title "Database Loading Progress Bar" --progress --auto-close --width="600"
             mkdir -p "./$dbName"
             cd "./$dbName" > /dev/null 2>&1
             database_page=false

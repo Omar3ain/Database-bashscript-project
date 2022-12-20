@@ -40,13 +40,25 @@ function First_page
             then
             mkdir  -p ./databases
             fi
+             (
+                echo 10
+                echo "# Reading User Input"
+                sleep 1
+
+                echo 15
+                echo "# Reading databases available"
+                sleep 1
+
+                echo 70
+                echo "# Installing databases..."
+                sleep 1
+
+                echo 100
+                echo "# database loading completed!"
+                ) | zenity --title "Database Loading Progress Bar" --progress --auto-close --width="600"
             cd ./databases
             First_page=false
             database_page=true
-            divider;
-            echo -e "${BABYBLUE}Loading...${ENDCOLOR}"
-            echo press any key
-            read 
             ;;
         2) 
             exit

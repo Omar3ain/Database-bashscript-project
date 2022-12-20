@@ -43,6 +43,14 @@ function table_page
             display_table;
             ;;
         9)
+                (
+                echo 10
+                echo "# Back to Database page"
+                sleep 2
+
+                echo 100
+                echo "# Database page loading completed!"
+                ) | zenity --title "Database page Loading Progress Bar" --progress --auto-close --width="600"
             cd ..
             First_page=false
             database_page=true
