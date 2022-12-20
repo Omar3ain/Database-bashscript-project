@@ -20,20 +20,18 @@ function get_input
     notValidData=true
     while $notValidData
     do
-    echo $1
-    read 
-        if [[ $REPLY = "" ]]; 
+    READ=$(get_input_gui "Table data" "$1");
+        if [[ $READ = "" ]]; 
         then
-            echo -e "${ERRORCOLOR}Invalid Input, please enter a valid one${ENDCOLOR}"
-
-        elif [[ $REPLY =~ [/.:\|\-] ]]; then
-            echo -e "${ERRORCOLOR}You can't enter these characters => . / : - | ${ENDCOLOR}"
-        elif [[ $REPLY =~ ^[a-zA-Z] ]]; then
-            echo -n "$REPLY" >> "$table_name"
+            sending_error "Invalid Input, please enter a valid one"
+        elif [[ $READ =~ [/.:\|\-] ]]; then
+            sending_error "You can't enter these characters => . / : - | $"
+        elif [[ $READ =~ ^[a-zA-Z] ]]; then
+            echo -n "$READ" >> "$table_name"
             echo -n "-" >> "$table_name"
             notValidData=false
         else
-            echo -e "${ERRORCOLOR}field name can't start with numbers or special characters${ENDCOLOR}"
+            sending_error "field name can't start with numbers or special characters"
         fi
     done
 }
@@ -62,14 +60,13 @@ function get_data_size
 {
         notValidData=true
         while $notValidData; do
-        echo -e "Enter column size"
-        read 
-        if [[ "$REPLY" = +([1-9])*([0-9]) ]]; then
-            echo -n "$REPLY" >> "$table_name"
+        READ=$(get_input_gui "Table data" "Enter column size")
+        if [[ "$READ" = +([1-9])*([0-9]) ]]; then
+            echo -n "$READ" >> "$table_name"
             echo -n "-" >> "$table_name"
             notValidData=false
         else
-            echo -e "\e[41minvalid entry\e[0m"
+            sending_error  "Enter valid number please"
         fi
     done
 }
@@ -78,19 +75,16 @@ function get_data_type
     if [[ $1 -eq 1 ]]; then
 	echo -n "integer" >> "$table_name"
     else
-    notValidData=true
-    while $notValidData; do
-            echo -e "Enter column type"
-            select choice in "integer" "string"; do
-                if [[ "$REPLY" = "1" || "$REPLY" = "2" ]]; then
-                    echo -n "$choice" >> "$table_name"
+        asnwer=$(zenity --list \
+                    --title="Table data" \
+                    --text "What is the datatype of that column ?" \
+                    --radiolist \
+                    --column "Pick" \
+                    --column "Answer" \
+                    FALSE "integer" \
+                    FALSE "string");
+                    echo -n "$asnwer" >> "$table_name"
                     notValidData=false
-                else
-                    echo -e "${ERRORCOLOR}invalid choice${ENDCOLOR}"
-                fi
-                break
-            done
-        done
     fi
     
 
