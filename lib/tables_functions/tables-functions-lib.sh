@@ -256,19 +256,34 @@ function delete_from_table
     read table_name
         if ! [[ -f "$table_name" ]]
         then
-            sending_output_to_the_user "${ERRORCOLOR}This Table $table_name NOT here, please try again${ENDCOLOR}"
+                zenity --error \
+                --title "Error Message" \
+                --width 500 \
+                --height 100 \
+                --text "This Table $table_name NOT here, please try again"
+                #sending_output_to_the_user "${ERRORCOLOR}This Table $table_name NOT here, please try again${ENDCOLOR}"
         else
                 echo -e "Enter primary key column Value: "
                 read value
                 if [[ $value == "" ]]
                 then
-                    sending_output_to_the_user "${ERRORCOLOR}Result $value NOT here${ENDCOLOR}"
+                    zenity --error \
+                    --title "Error Message" \
+                    --width 500 \
+                    --height 100 \
+                    --text "This Result $value NOT here, please try again"
+                    #sending_output_to_the_user "${ERRORCOLOR}Result $value NOT here${ENDCOLOR}"
                 elif ! [[ "$value" = ?(-)+([0-9])?(.)*([0-9]) ]]; then
                     sending_output_to_the_user "${ERRORCOLOR}Must be number ${ENDCOLOR}"
                 else
                     Num_Record=$(awk 'BEGIN{FS=":"}{if ($1=="'$value'") print NR}' $table_name 2>>./.error.log) 
                     if ! [[ $Num_Record -eq 1 ]]
                     then
+                        zenity --info \
+                        --title "Info Message" \
+                        --width 500 \
+                        --height 100 \
+                        --text "Delete from $table_name Successfully."
                         sed -i "${Num_Record}d" "$table_name"
                         sending_output_to_the_user "${BABYBLUE}Done, Row Deleted${ENDCOLOR}"
                     fi
