@@ -57,10 +57,11 @@ function table_page
 }
 function create_table
 {
-    table_name=$(zenity --entry \
-       --width 500 \
-       --title "Table name" \
-       --text "Enter the table name please");
+    table_name=$(get_input_gui "Table name" "Enter the table name please");
+        ret=$?
+        if ! [[ "$ret" == 0 ]] || [[ "$table_name" == '' ]]; then
+            return
+        fi
 	if [[ $table_name = "" ]]
         then
             sending_output_to_the_user "${ERRORCOLOR}Cant create a table without a name${ENDCOLOR}"
@@ -86,7 +87,10 @@ function create_table
 function table_fields 
 {
     number_of_columns=$(get_input_gui "Table data" "Enter number of columns please");
-
+        ret=$?
+        if ! [[ "$ret" == 0 ]] || [[ "$table_name" == '' ]]; then
+            return
+        fi
         notValidNumber=true
         while $notValidNumber 
         do
@@ -121,58 +125,57 @@ function table_fields
 }
 function drop_table 
 {
-    divider;
-    echo "enter the name of the table that you want to delete: "
-	read table_name
-	if ! [[ -f "$table_name" ]]; then
-		sending_output_to_the_user "${ERRORCOLOR}this table doesn't exist${ENDCOLOR}"
-	else
-		rm "$table_name"
-		sending_output_to_the_user "${BABYBLUE}table deleted${ENDCOLOR}"
-	fi
+    if [ -z "$(ls -A . )" ]; then
+        make_warning_gui "Warning" "No tables available"
+        else
+        table_name=$(zenity --title="Tables available" --text="" --list --column="Tables in that database" $(ls))
+        ret=$?
+        if ! [[ "$ret" == 0 ]] || [[ "$table_name" == '' ]]; then
+            return
+        fi
+        rm "$table_name"
+		notify-send "Table status" "Table removed successfully."
+        fi
 }
 function list_tables 
 {
-    echo -e "${BABYBLUE}List of all tables in the database${ENDCOLOR}"
-    ls
-    read
+        if [ -z "$(ls -A . )" ]; then
+        make_warning_gui "Warning" "No tables available"
+        else
+        zenity --title="Tables available" --text="" --list --column="Tables in that database" $(ls)
+        fi
+    
 }
 function insert_into_table
 {
-    table_name=$(zenity --entry \
-       --width 500 \
-       --title "Table name" \
-       --text "Enter the table name please");
-    if ! [[ -f "$table_name" ]]; then
-    sending_output_to_the_user "${ERRORCOLOR}This table does not exist${ENDCOLOR}"
-    else
-        number_of_fields=$(head -1 "$table_name" | awk -F: '{print NF}') 
+    if [ -z "$(ls -A . )" ]; then
+        make_warning_gui "Warning" "No tables available"
+        else
+        table_name=$(zenity --title="Tables available" --text="" --list --column="Tables in that database" $(ls));
+        ret=$?
+        if ! [[ "$ret" == 0 ]] || [[ "$table_name" == '' ]]; then
+            return
+        fi
+
+         number_of_fields=$(head -1 "$table_name" | awk -F: '{print NF}') ;
+
         for (( i = 1; i <= number_of_fields; i++ ));
         do
-        echo -e "Enter field $[i] data "
-
-
             notValidData=true
             while $notValidData
             do
-            read
-            check_type=$(check_datatype $table_name $i $REPLY)
-            check_size=$(check_for_size $table_name $i $REPLY)
-            primarynumber=$(cut -d ':' -f1 $table_name | awk '{if(NR != 1) print $0}' | grep -x -e "$REPLY") 
+            READ=$(get_input_gui "Enter field $[i] data:")
+            check_type=$(check_datatype $table_name $i $READ)
+            check_size=$(check_for_size $table_name $i $READ)
+            primarynumber=$(cut -d ':' -f1 $table_name | awk '{if(NR != 1) print $0}' | grep -x -e "$READ") 
             if [[ "$check_type" == 0 ]];then
-                echo -e "${ERRORCOLOR}Invalid datatype${ENDCOLOR}"
-                echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+                sending_error "Invalid datatype"
             elif [[ "$check_size" == 0 ]];then
-                echo -e "${ERRORCOLOR}Invalid dataSize${ENDCOLOR}"
-                echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
-            elif [[ $REPLY =~ [/.:\|\-] ]];then
-                echo -e "${ERRORCOLOR}Invalid input${ENDCOLOR}"
-                echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
-            elif [[ "$REPLY" == '' ]] || ! [[ "$primarynumber" == '' ]] || [[ "$REPLY" =~ ^" " ]] || [[ $i -eq 1 && "$REPLY" =~ " " ]] ;then
-            
-                echo -e "${ERRORCOLOR}Invalid input${ENDCOLOR}"
-                echo -e "${ERRORCOLOR}Either you entered blank input or used Primary key${ENDCOLOR}"
-                echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+                sending_error "Invalid datasize"
+            elif [[ $READ =~ [/.:\|\-] ]];then
+                sending_error  "Invalid input"
+            elif [[ "$READ" == '' ]] || ! [[ "$primarynumber" == '' ]] || [[ "$READ" =~ ^" " ]] || [[ $i -eq 1 && "$READ" =~ " " ]] ;then
+                sending_error "Either you entered blank input or used Primary key"
             else
             notValidData=false
             fi
@@ -180,151 +183,128 @@ function insert_into_table
 
             if [[ i -eq $number_of_fields ]] 
             then
-                echo "$REPLY" >> "$table_name"
+                echo "$READ" >> "$table_name"
                 else
-                echo  -n "$REPLY": >> "$table_name"
+                echo  -n "$READ": >> "$table_name"
             fi
         done
-        zenity --info --title="Data inserted successfully" --text="Press ok to continue" --no-wrap --width 400 --height 100
+        notify-send "Table status" "Data Inserted successfully."
+        fi
 
-    fi
 }
 function update_table 
 {
-    table_name=$(zenity --entry \
-       --width 500 \
-       --title "Table name" \
-       --text "Enter the table name please");
-    if ! [[ -f "$table_name" ]]; then
-    sending_output_to_the_user "${ERRORCOLOR}This table does not exist${ENDCOLOR}"
-    else
-        echo "Type column name you want to change its data please"
+    if [ -z "$(ls -A . )" ]; then
+        make_warning_gui "Warning" "No tables available"
+        else
+        table_name=$(zenity --title="Tables available" --text="" --list --column="Tables in that database" $(ls));
+        
+        ret=$?
+        if ! [[ "$ret" == 0 ]] || [[ "$table_name" == '' ]]; then
+            return
+        fi
+
+
         isFieldName "$table_name"
         col=$isFieldName
-
-        echo "Type row number you want to update please"
-        read row
 
         notnumber=true
         while $notnumber 
             do
+            row=$(get_input_gui "Type row number you want to update please")
             if [[ $row =~ ^[0-9]+$ ]]; then
             notnumber=false
             else
-            echo -e "${ERRORCOLOR}enter number please${ENDCOLOR}"
-            read row 
+            sending_error "Enter number please"
             fi
         done
         let row=$row+1
 
-        echo "enter the new value"
 
             notValidData=true
             while $notValidData
             do
-            read
-            check_type=$(check_datatype $table_name $col $REPLY)
-            check_size=$(check_for_size $table_name $col $REPLY)
-            primarynumber=$(cut -d ':' -f1 $table_name | awk '{if(NR != 1) print $0}' | grep -x -e "$REPLY") 
+            READ=$(get_input_gui "enter the new value")
+            check_type=$(check_datatype $table_name $col $READ)
+            check_size=$(check_for_size $table_name $col $READ)
+            primarynumber=$(cut -d ':' -f1 $table_name | awk '{if(NR != 1) print $0}' | grep -x -e "$READ") 
             if [[ "$check_type" == 0 ]];then
-                echo -e "${ERRORCOLOR}Invalid datatype${ENDCOLOR}"
-                echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+                sending_error "Invalid datatype"
             elif [[ "$check_size" == 0 ]];then
-                echo -e "${ERRORCOLOR}Invalid dataSize${ENDCOLOR}"
-                echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
-            elif [[ $REPLY =~ [/.:\|\-] ]];then
-                echo -e "${ERRORCOLOR}Invalid input${ENDCOLOR}"
-                echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
-            elif [[ "$REPLY" == '' ]] || ! [[ "$primarynumber" == '' ]] || [[ "$REPLY" =~ ^" " ]] || [[ $i -eq 1 && "$REPLY" =~ " " ]] ;then
-                echo -e "${ERRORCOLOR}Invalid input${ENDCOLOR}"
-                echo -e "${ERRORCOLOR}Either you entered blank input or used Primary key${ENDCOLOR}"
-                echo -e "${ERRORCOLOR}Enter field $[i] data again${ENDCOLOR}"
+                sending_error "Invalid datasize"
+            elif [[ $READ =~ [/.:\|\-] ]];then
+                sending_error  "Invalid input"
+            elif [[ "$READ" == '' ]] || ! [[ "$primarynumber" == '' ]] || [[ "$READ" =~ ^" " ]] || [[ $i -eq 1 && "$READ" =~ " " ]] ;then
+                sending_error "Either you entered blank input or used Primary key"
             else
             notValidData=false
             fi
             done
 
-        awk -v row=$row -v column=$col -v new_string=$REPLY 'BEGIN { FS = OFS = ":" } NR==row{gsub(/.*/,new_string,$column)} 1' $table_name > temp; mv temp $table_name;
+        awk -v row=$row -v column=$col -v new_string=$READ 'BEGIN { FS = OFS = ":" } NR==row{gsub(/.*/,new_string,$column)} 1' $table_name > temp; mv temp $table_name;
 
-         zenity --info --title="Data Updated successfully" --text="Press ok to continue" --no-wrap --width 400 --height 100
-    fi
-
+        notify-send "Table status" "Data Updated successfully."
+        fi
 }
 function delete_from_table 
 {
-    echo -e "Enter Table Name: "
-    read table_name
-        if ! [[ -f "$table_name" ]]
-        then
-                zenity --error \
-                --title "Error Message" \
-                --width 500 \
-                --height 100 \
-                --text "This Table $table_name NOT here, please try again"
-                #sending_output_to_the_user "${ERRORCOLOR}This Table $table_name NOT here, please try again${ENDCOLOR}"
+    if [ -z "$(ls -A . )" ]; then
+        make_warning_gui "Warning" "No tables available"
         else
-                echo -e "Enter primary key column Value: "
-                read value
+        table_name=$(zenity --title="Tables available" --text="" --list --column="Tables in that database" $(ls));
+        
+        ret=$?
+        if ! [[ "$ret" == 0 ]] || [[ "$table_name" == '' ]]; then
+            return
+        fi
+                value=$(get_input_gui "Enter primary key column Value: ");
+                
                 if [[ $value == "" ]]
                 then
-                    zenity --error \
-                    --title "Error Message" \
-                    --width 500 \
-                    --height 100 \
-                    --text "This Result $value NOT here, please try again"
-                    #sending_output_to_the_user "${ERRORCOLOR}Result $value NOT here${ENDCOLOR}"
+                    sending_error "This Result $value NOT here, please try again"
                 elif ! [[ "$value" = ?(-)+([0-9])?(.)*([0-9]) ]]; then
-                    sending_output_to_the_user "${ERRORCOLOR}Must be number ${ENDCOLOR}"
+                    sending_error "Must be number"
                 else
-                    Num_Record=$(awk 'BEGIN{FS=":"}{if ($1=="'$value'") print NR}' $table_name 2>>./.error.log) 
-                    if ! [[ $Num_Record -eq 1 ]]
+                    Num_Record=$(awk 'BEGIN{FS=":"}{if ($1=="'$value'") print NR}' $table_name  2>/dev/null);
+                    if ! [[ $Num_Record -eq 1 ]] && [[ -n $Num_Record ]];
                     then
-                        zenity --info \
-                        --title "Info Message" \
-                        --width 500 \
-                        --height 100 \
-                        --text "Delete from $table_name Successfully."
                         sed -i "${Num_Record}d" "$table_name"
-                        sending_output_to_the_user "${BABYBLUE}Done, Row Deleted${ENDCOLOR}"
+                        notify-send "Table status" "Row Deleted successfully."
                     fi
             fi
         fi
 }
 function display_table
 {
-    echo -e "Enter name of table"
-    read table_name
-    if ! [[ -f "$table_name" ]]; then
-		echo -e "${ERRORCOLOR}This table doesn't exist${ENDCOLOR}"
-		read
-    elif [[ $table_name = "" ]];then
-        echo -e "${ERRORCOLOR}Enter the name of table please${ENDCOLOR}"
-		read
-    else
-        echo -e "${BABYBLUE}$table_name table${ENDCOLOR}"
-        printTable ':' "$(cat $table_name)"
-        echo -e "${NEXTLINE}Press enter to continue"
-        read
-    fi
+
+        if [ -z "$(ls -A . )" ]; then
+        make_warning_gui "Warning" "No tables available"
+        else
+            table_name=$(zenity --title="Tables available" --text="" --list --column="Tables in that database" $(ls));
+            ret=$?
+            if ! [[ "$ret" == 0 ]] || [[ "$table_name" == '' ]]; then
+                return
+            fi
+                display_table_gui "$table_name"
+        fi
 }
 function select_from_table 
 {
-    echo -e "Enter Table Name: "
-    read table_name
-        if ! [[ -f "$table_name" ]]
-                then
-                    sending_output_to_the_user "${ERRORCOLOR}This Table $table_name NOT here, please try again${ENDCOLOR}"
-                else
-                    echo "Enter Number of ROW That You want to Select it: " 
-                    read row
-                        if [[ "$row" == '' || "$row" == 0 ]]
-                            then
-                                sending_output_to_the_user "${ERRORCOLOR}This value NOT here${ENDCOLOR}"
-                            else    
-                            let row=$row+1
-                            printTable ':' "$(awk 'BEGIN{ FS = "-"} {if(NR=='$row') print $0}' $table_name)"
-                            read
-
-                        fi
+    if [ -z "$(ls -A . )" ]; then
+            make_warning_gui "Warning" "No tables available"
+        else
+            table_name=$(zenity --title="Tables available" --text="" --list --column="Tables in that database" $(ls));
+            ret=$?
+            if ! [[ "$ret" == 0 ]] || [[ "$table_name" == '' ]]; then
+                return
+            fi
+            row=$(get_input_gui "Enter Number of ROW That You want to Select it: ")
+            if [[ "$row" == '' || "$row" == 0 ]]
+            then
+                sending_error "This value NOT here"
+            else    
+                let row=$row+1
+                select_from_table_gui "$table_name" "$row"
+            fi
         fi
 }

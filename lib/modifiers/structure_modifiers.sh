@@ -124,17 +124,13 @@ function isFieldName
 {
     notFieldName=true
     columns=$(head -1 "$1" | awk 'BEGIN{ RS = ":"; FS = "-" } {print $1}')
-    while $notFieldName 
-        do
-        read field_name
+
+        field_name=$(get_input_gui "Type column name you want to change its data please")
         if [[ $(echo "$columns" | grep -x "$field_name") = "" ]]; then
-            echo -e "${ERRORCOLOR}That field does not exsist${ENDCOLOR}"
-            echo -e "${ERRORCOLOR}Enter the field name again${ENDCOLOR}"
+            sending_error "That field does not exsist"
         else
             isFieldName=$(head -1 "$1" | awk 'BEGIN{ RS = ":"; FS = "-" } {print $1}'| grep -x -n $field_name | cut -d: -f1)
             export isFieldName
-            notFieldName=false
         fi
-    done
 }
 
