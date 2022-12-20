@@ -266,6 +266,11 @@ function delete_from_table
                     --text "This Result $value NOT here, please try again"
                     #sending_output_to_the_user "${ERRORCOLOR}Result $value NOT here${ENDCOLOR}"
                 elif ! [[ "$value" = ?(-)+([0-9])?(.)*([0-9]) ]]; then
+                    zenity --warning \
+                        --title "Warning Message" \
+                        --width 500 \
+                        --height 100 \
+                        --text "Must be input number"
                     sending_output_to_the_user "${ERRORCOLOR}Must be number ${ENDCOLOR}"
                 else
                     Num_Record=$(awk 'BEGIN{FS=":"}{if ($1=="'$value'") print NR}' $table_name 2>>./.error.log) 
@@ -275,9 +280,9 @@ function delete_from_table
                         --title "Info Message" \
                         --width 500 \
                         --height 100 \
-                        --text "Delete from $table_name Successfully."
+                        --text "Done, Row Deleted from $table_name Successfully."
                         sed -i "${Num_Record}d" "$table_name"
-                        sending_output_to_the_user "${BABYBLUE}Done, Row Deleted${ENDCOLOR}"
+                        #sending_output_to_the_user "${BABYBLUE}Done, Row Deleted${ENDCOLOR}"
                     fi
             fi
         fi
