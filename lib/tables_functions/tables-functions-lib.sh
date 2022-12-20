@@ -57,8 +57,10 @@ function table_page
 }
 function create_table
 {
-    echo -e "Enter Table name please"
-    read table_name
+    table_name=$(zenity --entry \
+       --width 500 \
+       --title "Table name" \
+       --text "Enter the table name please");
 	if [[ $table_name = "" ]]
         then
             sending_output_to_the_user "${ERRORCOLOR}Cant create a table without a name${ENDCOLOR}"
@@ -78,20 +80,26 @@ function create_table
         then
             touch $table_name
             table_fields;
-            sending_output_to_the_user "${BABYBLUE}Table created sucessfully${ENDCOLOR}"
+            notify-send "Table status" "Table Created successfully."
 	fi
 }
 function table_fields 
 {
-    echo "Enter number of columns please"
-    read number_of_columns
+    number_of_columns=$(get_input_gui "Table data" "Enter number of columns please");
+
+        notValidNumber=true
+        while $notValidNumber 
+        do
         if ! [[ "$number_of_columns" = +([1-9])*([0-9]) ]]; then
-            echo -e "${ERRORCOLOR}Enter valid number please${ENDCOLOR}"
-            read number_of_columns
+            sending_error "Enter valid number please.";
+            number_of_columns=$(get_input_gui "Table data" "Enter valid number of columns please");
         elif [[ "$number_of_columns" -gt 25 ]]; then
-            echo -e "${ERRORCOLOR}Can't be that big number of columns${ENDCOLOR}"
-            read number_of_columns
+            sending_error "Can't be that big number of columns.";
+            number_of_columns=$(get_input_gui "Table data" "Enter valid number of columns please");
+        else
+            notValidNumber=false
         fi
+        done
 
         for (( i = 1; i <= number_of_columns; i++ ));
         do
@@ -107,7 +115,6 @@ function table_fields
             if ! [[ i -eq $number_of_columns ]]
             then
             echo -n ":" >> "$table_name"
-            
             fi
         done
         echo >> "$table_name"
@@ -178,7 +185,8 @@ function insert_into_table
                 echo  -n "$REPLY": >> "$table_name"
             fi
         done
-        zenity --info --title="Data inserted successfully" --text="Press ok to continue" --no-wrap --width 600--height 200
+        zenity --info --title="Data inserted successfully" --text="Press ok to continue" --no-wrap --width 400 --height 100
+
     fi
 }
 function update_table 
@@ -238,7 +246,7 @@ function update_table
 
         awk -v row=$row -v column=$col -v new_string=$REPLY 'BEGIN { FS = OFS = ":" } NR==row{gsub(/.*/,new_string,$column)} 1' $table_name > temp; mv temp $table_name;
 
-         zenity --info --title="Data Updated successfully" --text="Press ok to continue" --no-wrap --width 600--height 200
+         zenity --info --title="Data Updated successfully" --text="Press ok to continue" --no-wrap --width 400 --height 100
     fi
 
 }

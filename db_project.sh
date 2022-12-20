@@ -4,6 +4,7 @@ source lib/modifiers/structure_modifiers.sh
 source lib/database_functions/database.functions-lib.sh
 source lib/tables_functions/tables-functions-lib.sh
 source lib/modifiers/print_methods.sh
+source lib/modifiers/GUI.sh
 
 
 # First_page
