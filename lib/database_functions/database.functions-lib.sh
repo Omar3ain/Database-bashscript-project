@@ -49,14 +49,16 @@ function database_page
 }
 function CreateDB 
 {
-    echo -e "Enter the name of the database please"
-	read dbName
+    dbName=$(zenity --entry \
+       --width 500 \
+       --title "Table name" \
+       --text "Enter the Database name please");
 	if [[ $dbName = "" ]]
         then
-            sending_output_to_the_user "${ERRORCOLOR}Can't create a database without a name${ENDCOLOR}"
+            sending_error "Can't create a database without a name"
 	elif [[ -e $dbName ]] 
         then
-            sending_output_to_the_user "${ERRORCOLOR}This database name is already exsists${ENDCOLOR}"
+            sending_error "This database name is already exsists"
 	elif [[ $dbName =~ ^[a-zA-Z] ]] 
         then
             mkdir -p "./$dbName"
@@ -64,34 +66,40 @@ function CreateDB
             database_page=false
             create_table_page=true
             sending_output_to_the_user "${BABYBLUE}Database created sucessfully${ENDCOLOR}"
+            
 	else
-		sending_output_to_the_user "${ERRORCOLOR}Database name can't start with numbers or special characters${ENDCOLOR}"
+		make_warning_gui "Warning Input" "Database name can't start with numbers or special characters"
 	fi
 }
 function DropDB 
 {
     divider;    
-    echo -e "Enter the name of the database"
-        read dbName
+
+    dbName=$(zenity --entry \
+       --width 500 \
+       --title "Table name" \
+       --text "Enter the Database name please");
         db="$dbName"
         if [[ "$dbName" = '' ]]; then
-                sending_output_to_the_user "${ERRORCOLOR}Can't delete a database without a name${ENDCOLOR}"
+                sending_error "Can't delete a database without a name"
         elif ! [[ -d "$dbName" ]]; then
-                sending_output_to_the_user "${ERRORCOLOR}This database doesn't exist${ENDCOLOR}"    
+                sending_error "This database doesn't exist"    
         else
                 rm -r "./$dbName"
-                sending_output_to_the_user "${BABYBLUE}$dbName Removed from your databases${ENDCOLOR}"
+                sending_output_to_the_user "$dbName Removed from your databases"
         fi
 }
 function SelectDB 
 {
     divider;
-    echo -e "Enter Database Name: "
-    read dbName
+    dbName=$(zenity --entry \
+       --width 500 \
+       --title "Table name" \
+       --text "Enter the Database name please");
         if [[ "$dbName" = '' ]]; then
-				sending_output_to_the_user "${ERRORCOLOR}please enter a correct name then click enter, Don't try this character again${ENDCOLOR}"
+				make_warning_gui "Warning Input" "please enter a correct name then click enter, Don't try this character again."
         elif ! [[ -d "$dbName" ]]; then
-				sending_output_to_the_user "${ERRORCOLOR}This database_name doesn't exist${ENDCOLOR}"
+				sending_error "This database_name doesn't exist."
         else
                 cd "$dbName"
                 database_page=false

@@ -10,12 +10,24 @@ function get_input_gui
 {
     zenity --entry \
        --width 500 \
+       --height 100 \
        --title "$1" \
        --text "$2"
 }
 function make_warning_gui
 {
-    zenity --warning --title="$1" --text="$2"
+    zenity --warning --width 500 --height 100 --title="$1" --text="$2"
+}
+
+function info_massage
+{
+
+enity --info \
+       --title "$1" \
+       --width 500 \
+       --height 100 \
+       --text "$2"
+
 }
 function display_table_gui
 {
