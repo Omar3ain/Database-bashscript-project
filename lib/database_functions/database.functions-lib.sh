@@ -12,47 +12,65 @@ function database_title
     echo -e "${LIGHTGREY}${BLACK}----------------------------------------------------------------------------------------${ENDCOLOR}"
     echo
 }
+function back_function_database
+{
+                    ret=$?
+                    if ! [[ "$ret" == 0 ]] || [[ "$ asnwer" == '' ]]; then
+                    First_page=false
+                    database_page=true
+                    create_table_page=false
+                    fi
+}
 function database_page
 {
-    database_title;
-    select choice in "Create Database" "List Databases" "Connect To a Database" "Drop Database" "Back"
-    do
-    case $REPLY in
-        1) 
-            CreateDB;
-            ;;
-        2)  
-            List_databases;
-            ;;
-        3)
-            SelectDB
-            ;;
-        4)
-            DropDB
-            ;;
-        5)
-                (
-                echo 10
-                echo "# Back to Main page"
-                sleep 2
+     asnwer=$(zenity --list \
+                    --title="Database DBMS" \
+                    --text "Select From menu please" \
+                    --radiolist \
+                    --column "Pick" \
+                    --cancel-label="Go back" \
+                    --column "Answer" \
+                    --width=1000 \
+                    --height=500 \
+                    TRUE "Create Database" \
+                    FALSE "List Databases" \
+                    FALSE "Connect To a Database" \
+                    FALSE "Drop Database" )
+                    ret=$?
+                    if ! [[ "$ret" == 0 ]] || [[ "$ dbName" == '' ]]; then
+                        cd .. 
+                    First_page=true
+                    database_page=false
+                    create_table_page=false
+                    return
+                    fi
 
-                echo 100
-                echo "# main page loading completed!"
-                ) | zenity --title "Main page Loading Progress Bar" --progress --auto-close --width="600"
-            cd ..
-            First_page=true
-            database_page=false
-            create_table_page=false
-            ;;
-        6) 
-            exit
-            ;;
-        *)
-            invalid_list_input_handle;
-            ;;
-    esac
-    break
-    done
+                    if [[ $asnwer == "Create Database" ]];then
+                    CreateDB;
+                    back_function_database;
+                    elif [[ $asnwer == "List Databases" ]];then
+                    List_databases;
+                    back_function_database;
+                    elif [[ $asnwer == "Connect To a Database" ]];then
+                    SelectDB;
+                    back_function_database;
+                    elif [[ $asnwer == "Drop Database" ]];then
+                    DropDB;
+                    back_function_database;
+                    elif [[ $asnwer == "Back" ]];then
+                      (
+                        echo 10
+                        echo "# Back to Main page"
+                        sleep 2
+
+                        echo 100
+                        echo "# main page loading completed!"
+                        ) | zenity --title "Main page Loading Progress Bar" --progress --auto-close --width="600"
+                    cd ..
+                    First_page=true
+                    database_page=false
+                    create_table_page=false
+    fi
 }
 function CreateDB 
 {

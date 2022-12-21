@@ -6,41 +6,40 @@ source lib/tables_functions/tables-functions-lib.sh
 source lib/modifiers/print_methods.sh
 source lib/modifiers/GUI.sh
 
-
+printf '\033[8;1;1t'
 # First_page
-function Main_page_title 
-{
-    tput bold
-    echo -e "${LIGHTGREY}${BLACK}----------------------------------------------------------------------------------------${ENDCOLOR}"
-    tput bold
-    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
-    tput bold
-    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
-    tput bold
-    echo -e "${LIGHTGREY}${BLACK}|                           Bash shell Script project - DBMS                           |${ENDCOLOR}"
-    tput bold
-    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
-    tput bold
-    echo -e "${LIGHTGREY}${BLACK}|                      Omar medhat abdelfattah - Montanser hassan                      |${ENDCOLOR}"
-    tput bold
-    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
-    tput bold
-    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
-    tput bold
-    echo -e "${LIGHTGREY}${BLACK}----------------------------------------------------------------------------------------${ENDCOLOR}"
-    echo
-}
+while $first_time 
+    do
+    zenity --info --text="
+            Welcome to DBMS bash project
+
+            Made by      
+
+            OMAR MEDHAT 
+            MONTASER HASSAN" --title=DBMS --width=500 --height=300 
+        
+    first_time=false
+    done
+
 function First_page
 {
-    Main_page_title;
-    select choice in "Create or enter database" "Exit"
-    do
-    case $REPLY in
-        1) if ! [[ -e `pwd`/databases ]];
-            then
-            mkdir  -p ./databases
-            fi
-             (
+    asnwer=$(zenity --list \
+                    --title="Database DBMS" \
+                    --text "Select how would you start?" \
+                    --radiolist \
+                    --cancel-label="Exit" \
+                    --column "Pick" \
+                    --column "Answer" \
+                    --width=1000 \
+                    --height=500 \
+                    TRUE "Create or enter database")
+            if [[ $asnwer == "Create or enter database" ]];then
+            if ! [[ -e `pwd`/databases ]];
+                then
+                mkdir  -p ./databases
+                fi
+                cd ./databases
+            (
                 echo 10
                 echo "# Reading User Input"
                 sleep 1
@@ -49,28 +48,19 @@ function First_page
                 echo "# Reading databases available"
                 sleep 1
 
-                echo 70
+                echo 50
                 echo "# Installing databases..."
                 sleep 1
 
                 echo 100
                 echo "# database loading completed!"
                 ) | zenity --title "Database Loading Progress Bar" --progress --auto-close --width="600"
-            cd ./databases
             First_page=false
             database_page=true
-            ;;
-        2) 
-            exit
-            ;;
-        *)
-            invalid_list_input_handle;
-            ;;
-    esac
-    break
-    done
+        else
+        exit
+    fi
 }
-
 while true; do
 	while $First_page;
     do	

@@ -12,56 +12,69 @@ function table_page_title
     echo -e "${LIGHTGREY}${BLACK}----------------------------------------------------------------------------------------${ENDCOLOR}"
     echo
 } 
+function back_function_table
+{
+                    ret=$?
+                    if ! [[ "$ret" == 0 ]] || [[ "$ asnwer" == '' ]]; then
+                    First_page=false
+                    database_page=false
+                    create_table_page=true
+                    fi
+}
 function table_page 
 {
-    table_page_title;
-    select choice in "Create Table" "List Tables" "Drop Table" "Insert into Table" "Select From Table" "Delete From Table" "Update row in table" "Display table" "Back"
-    do
-    case $REPLY in
-        1)
-            create_table;
-            ;;
-        2)
-            list_tables;
-            ;;
-        3)
-            drop_table;
-            ;;
-        4)
-            insert_into_table;
-            ;;
-        5)
-            select_from_table;
-            ;;
-        6)
-            delete_from_table;
-            ;;
-        7)
-            update_table;
-            ;;
-        8)
-            display_table;
-            ;;
-        9)
-                (
-                echo 10
-                echo "# Back to Database page"
-                sleep 2
+    asnwer=$(zenity --list \
+                    --title="Database DBMS" \
+                    --text "Select From menu please" \
+                    --radiolist \
+                    --cancel-label="Go back" \
+                    --column "Pick" \
+                    --column "Answer" \
+                    --width=1000 \
+                    --height=500 \
+                    TRUE "Create Table" \
+                    FALSE "List Tables" \
+                    FALSE "Drop Table" \
+                    FALSE "Insert into Table" \
+                    FALSE "Select From Table" \
+                    FALSE "Delete From Table" \
+                    FALSE "Update row in table" \
+                    FALSE "Display table" )
+                    ret=$?
+                    if ! [[ "$ret" == 0 ]] || [[ "$ dbName" == '' ]]; then
+                        cd .. 
+                    First_page=false
+                    database_page=true
+                    create_table_page=false
+                    return
+                    fi
+                    
 
-                echo 100
-                echo "# Database page loading completed!"
-                ) | zenity --title "Database page Loading Progress Bar" --progress --auto-close --width="600"
-            cd ..
-            First_page=false
-            database_page=true
-            create_table_page=false
-            ;;
-        *)
-            invalid_list_input_handle;
-            ;;
-    esac
-    break
-    done
+                    if [[ $asnwer == "Create Table" ]];then
+                    create_table;
+                    back_function_table;
+                    elif [[ $asnwer == "List Tables" ]];then
+                    list_tables;
+                    back_function_table;
+                    elif [[ $asnwer == "Drop Table" ]];then
+                    drop_table;
+                    back_function_table;
+                    elif [[ $asnwer == "Insert into Table" ]];then
+                    insert_into_table;
+                    back_function_table;
+                    elif [[ $asnwer == "Select From Table" ]];then
+                    select_from_table;
+                    back_function_table;
+                    elif [[ $asnwer == "Delete From Table" ]];then
+                    delete_from_table;
+                    back_function_table;
+                    elif [[ $asnwer == "Update row in table" ]];then
+                    update_table;
+                    back_function_table;
+                    elif [[ $asnwer == "Display table" ]];then
+                    display_table;
+                    back_function_table;
+    fi
 }
 function create_table
 {
@@ -173,8 +186,8 @@ function insert_into_table
             while $notValidData
             do
             READ=$(get_input_gui "Data entry" "Enter field $[i] data:")
-            check_type=$(check_datatype $table_name $i $READ)
-            check_size=$(check_for_size $table_name $i $READ)
+            check_type=$(check_datatype "$table_name" "$i" "$READ")
+            check_size=$(check_for_size "$table_name" "$i" "$READ")
             primarynumber=$(cut -d ':' -f1 $table_name | awk '{if(NR != 1) print $0}' | grep -x -e "$READ") 
             if [[ "$check_type" == 0 ]];then
                 sending_error "Invalid datatype"
@@ -249,7 +262,7 @@ function update_table
             fi
             done
 
-        awk -v row=$row -v column=$col -v new_string=$READ 'BEGIN { FS = OFS = ":" } NR==row{gsub(/.*/,new_string,$column)} 1' $table_name > temp; mv temp $table_name;
+        awk -v row=$row -v column=$col -v new_string="${READ}" 'BEGIN { FS = OFS = ":" } NR==row{gsub(/.*/,new_string,$column)} 1' $table_name > temp; mv temp $table_name;
 
         notify-send "Table status" "Data Updated successfully."
         fi

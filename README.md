@@ -1,4 +1,5 @@
 # Database-bashscript-project
+- Must be installed it : "zenity" backage in order to work.
 ## Structure of files (lib folder)
 1. Database functions
 2. Table functions
