@@ -41,15 +41,16 @@ function First_page
                 cd ./databases
             (
                 echo 10
-                echo "# Reading User Input"
-
+                echo "# Reading User Input" 
+                sleep 0.5
+                
                 echo 15
                 echo "# Reading databases available"
-                
+                sleep 0.5
 
                 echo 50
                 echo "# Installing databases..."
-                sleep 1
+                sleep 0.5
 
                 echo 100
                 echo "# database loading completed!"

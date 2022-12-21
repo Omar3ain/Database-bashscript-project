@@ -1,3 +1,4 @@
+#!/bin/bash
 function sending_error 
 {
     zenity --error \
@@ -35,7 +36,7 @@ function display_table_gui
     number_of_fields=$(head -1 "$1" | awk -F: '{print NF}') ;
     for (( i = 1; i <= number_of_fields; i++ ));
         do
-            temp=$(head -1 $1 | cut -d ":" -f"$i" | awk -F "-" 'BEGIN { RS = ":" } {print $1}' | tr '[:lower:]' '[:upper:]');
+            temp=$(head -1 "$1" | cut -d ":" -f"$i" | awk -F "-" 'BEGIN { RS = ":" } {print $1}' | tr '[:lower:]' '[:upper:]');
             new=$new" --column="$temp"";
         done
         

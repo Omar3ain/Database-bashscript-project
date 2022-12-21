@@ -1,17 +1,4 @@
 #!/bin/bash
-function table_page_title
-{
-    echo -e "${LIGHTGREY}${BLACK}----------------------------------------------------------------------------------------${ENDCOLOR}"
-    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
-    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
-    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
-    echo -e "${LIGHTGREY}${BLACK}|                    WELCOME TO TABLES PAGE OF DATABASE '${dbName}'                     |${ENDCOLOR}"
-    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
-    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"
-    echo -e "${LIGHTGREY}${BLACK}|                                                                                      |${ENDCOLOR}"  
-    echo -e "${LIGHTGREY}${BLACK}----------------------------------------------------------------------------------------${ENDCOLOR}"
-    echo
-} 
 function back_function_table
 {
                     ret=$?
@@ -85,19 +72,19 @@ function create_table
         fi
 	if [[ $table_name = "" ]]
         then
-            sending_output_to_the_user "${ERRORCOLOR}Cant create a table without a name${ENDCOLOR}"
+            sending_error "Cant create a table without a name"
 	elif [[ -e $table_name ]] 
         then
-            sending_output_to_the_user "${ERRORCOLOR}This table name is already exsists${ENDCOLOR}"
+            sending_error "This table name is already exsists"
     elif [[ $table_name =~ [/] ]] 
         then
-            sending_output_to_the_user "${ERRORCOLOR}Can't use / in naming the table${ENDCOLOR}"
+            sending_error "Can't use / in naming the table"
     elif [[ $table_name =~ [.:\|\-] ]] 
         then
-            sending_output_to_the_user "${ERRORCOLOR}Can't use special character in naming the table${ENDCOLOR}"
+            sending_error "Can't use special character in naming the table"
     elif [[ $table_name =~ [1-9] ]] 
         then
-            sending_output_to_the_user "${ERRORCOLOR}Can't use Numbers in naming the table${ENDCOLOR}"        
+            sending_error "Can't use Numbers in naming the table"        
 	elif [[ $table_name =~ ^[a-zA-Z] ]] 
         then
             touch $table_name
@@ -195,8 +182,8 @@ function insert_into_table
                 sending_error "Invalid datasize"
             elif [[ $READ =~ [/.:\|\-] ]];then
                 sending_error  "Invalid input"
-            elif [[ "$READ" == '' ]] || ! [[ "$primarynumber" == '' ]] || [[ "$READ" =~ ^" " ]] || [[ $i -eq 1 && "$READ" =~ " " ]] ;then
-                sending_error "Either you entered blank input or used Primary key"
+            elif [[ "$READ" == '' ]] || ! [[ "$primarynumber" == '' ]] || [[ "$READ" =~ ^" " ]] || [[ $i -eq 1 && "$READ" =~ " " || $i -eq 1 && "$READ" == 0 ]] ;then
+                sending_error "Either you entered blank input , used a taken Primary key or entered 0 value for a primary key"
             else
             notValidData=false
             fi

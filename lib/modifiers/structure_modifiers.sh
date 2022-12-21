@@ -26,6 +26,8 @@ function get_input
             sending_error "Invalid Input, please enter a valid one"
         elif [[ $READ =~ [/.:\|\-] ]]; then
             sending_error "You can't enter these characters => . / : - | $"
+        elif [[ "$READ" =~ " " ]]; then
+        sending_error "You can't name a column with space."
         elif [[ $READ =~ ^[a-zA-Z] ]]; then
             echo -n "$READ" >> "$table_name"
             echo -n "-" >> "$table_name"
@@ -135,13 +137,16 @@ function isFieldName
 {
     notFieldName=true
     columns=$(head -1 "$1" | awk 'BEGIN{ RS = ":"; FS = "-" } {print $1}')
-
-        field_name=$(get_input_gui "Type column name you want to change its data please")
+    while $notFieldName;
+    do
+        field_name=$(get_input_gui "Update table" "Type column name you want to change its data please")
         if [[ $(echo "$columns" | grep -x "$field_name") = "" ]]; then
             sending_error "That field does not exsist"
         else
             isFieldName=$(head -1 "$1" | awk 'BEGIN{ RS = ":"; FS = "-" } {print $1}'| grep -x -n $field_name | cut -d: -f1)
             export isFieldName
+            notFieldName=false
         fi
+    done
 }
 
