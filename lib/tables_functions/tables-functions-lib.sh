@@ -66,10 +66,6 @@ function table_page
 function create_table
 {
     table_name=$(get_input_gui "Table name" "Enter the table name please");
-        ret=$?
-        if ! [[ "$ret" == 0 ]] || [[ "$table_name" == '' ]]; then
-            return
-        fi
 	if [[ $table_name = "" ]]
         then
             sending_error "Cant create a table without a name"
