@@ -61,7 +61,7 @@ function database_page
                       (
                         echo 10
                         echo "# Back to Main page"
-                        sleep 2
+                        sleep 1
 
                         echo 100
                         echo "# main page loading completed!"

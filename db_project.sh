@@ -42,11 +42,10 @@ function First_page
             (
                 echo 10
                 echo "# Reading User Input"
-                sleep 1
 
                 echo 15
                 echo "# Reading databases available"
-                sleep 1
+                
 
                 echo 50
                 echo "# Installing databases..."
