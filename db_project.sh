@@ -30,8 +30,8 @@ function First_page
                     --cancel-label="Exit" \
                     --column "Pick" \
                     --column "Answer" \
-                    --width=1000 \
-                    --height=500 \
+                    --width=$w \
+                    --height=$h \
                     TRUE "Create or enter database")
             if [[ $asnwer == "Create or enter database" ]];then
             if ! [[ -e `pwd`/databases ]];

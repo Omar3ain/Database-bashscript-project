@@ -17,8 +17,8 @@ function table_page
                     --cancel-label="Go back" \
                     --column "Pick" \
                     --column "Answer" \
-                    --width=1000 \
-                    --height=500 \
+                    --width=$w \
+                    --height=$h \
                     TRUE "Create Table" \
                     FALSE "List Tables" \
                     FALSE "Drop Table" \
@@ -82,10 +82,10 @@ function create_table
     elif [[ $table_name =~ [.:\|\-] ]] 
         then
             sending_error "Can't use special character in naming the table"
-    elif [[ $table_name =~ [1-9] ]] 
+    elif [[ $table_name =~ [0-9] ]] 
         then
             sending_error "Can't use Numbers in naming the table"        
-	elif [[ $table_name =~ ^[a-zA-Z] ]] 
+	elif [[ $table_name =~ ^[a-zA-Z]+$ ]] 
         then
             touch $table_name
             table_fields;

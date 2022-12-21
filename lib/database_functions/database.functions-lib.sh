@@ -17,8 +17,8 @@ function database_page
                     --column "Pick" \
                     --cancel-label="Go back" \
                     --column "Answer" \
-                    --width=1000 \
-                    --height=500 \
+                    --width=$w \
+                    --height=$h \
                     TRUE "Create Database" \
                     FALSE "List Databases" \
                     FALSE "Connect To a Database" \

@@ -1,8 +1,4 @@
 #!/bin/bash
-function divider 
-{
-    echo -e "**************************************************************************"
-}
 function invalid_list_input_handle
 {
     echo -e "${ERRORCOLOR}Please choose from the list${ENDCOLOR}"

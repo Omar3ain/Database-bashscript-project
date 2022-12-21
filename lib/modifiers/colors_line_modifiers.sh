@@ -7,3 +7,5 @@ ENDCOLOR="\e[0m"
 #LINE MODFIERS
 TAB="\t"
 NEXTLINE="\n"
+w=1500
+h=1000
