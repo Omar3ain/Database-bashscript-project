@@ -79,6 +79,7 @@ function create_table
     elif [[ $table_name =~ [/] ]] 
         then
             sending_error "Can't use / in naming the table"
+
     elif [[ $table_name =~ [.:*"#""@""$"")""}""{""("!"|""\\"-] ]] 
         then
             sending_error "Can't use special character in naming the table"
@@ -250,7 +251,7 @@ function update_table
                 sending_error "Invalid datasize"
             elif [[ $READ =~ [/.:\|\-] ]];then
                 sending_error  "Invalid input"
-            elif [[ "$READ" == '' ]] || ! [[ "$primarynumber" == '' ]] || [[ "$READ" =~ ^" " ]] || [[ $i -eq 1 && "$READ" =~ " " ]] ;then
+            elif [[ "$READ" == '' ]] || ! [[ "$primarynumber" == '' ]] || [[ "$READ" =~ ^" " ]] || [[ $col -eq 1 && "$READ" =~ " " ]] ;then
                 sending_error "Either you entered blank input or used Primary key"
             else
             notValidData=false
