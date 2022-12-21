@@ -169,10 +169,14 @@ function insert_into_table
 
         for (( i = 1; i <= number_of_fields; i++ ));
         do
+
+        TYPE=$(head -1 "$table_name" | cut -d ':' -f$i | awk -F "-" 'BEGIN { RS = ":" } {print $4}');
+        NAME=$(head -1 "$table_name" | cut -d ':' -f$i | awk -F "-" 'BEGIN { RS = ":" } {print $1}');
+
             notValidData=true
             while $notValidData
             do
-            READ=$(get_input_gui "Data entry" "Enter field $[i] data:")
+            READ=$(get_input_gui "Data entry" "Enter Column '"$NAME"', type '"$TYPE"'");
             check_type=$(check_datatype "$table_name" "$i" "$READ")
             check_size=$(check_for_size "$table_name" "$i" "$READ")
             primarynumber=$(cut -d ':' -f1 $table_name | awk '{if(NR != 1) print $0}' | grep -x -e "$READ") 
@@ -232,7 +236,11 @@ function update_table
             notValidData=true
             while $notValidData
             do
-            READ=$(get_input_gui "Update table" "enter the new value")
+
+            TYPE=$(head -1 "$table_name" | cut -d ':' -f$col | awk -F "-" 'BEGIN { RS = ":" } {print $4}');
+            NAME=$(head -1 "$table_name" | cut -d ':' -f$col | awk -F "-" 'BEGIN { RS = ":" } {print $1}');
+
+            READ=$(get_input_gui "Update table" "enter the new value '"$NAME"', type '"$TYPE"'")
             check_type=$(check_datatype $table_name $col $READ)
             check_size=$(check_for_size $table_name $col $READ)
             primarynumber=$(cut -d ':' -f1 $table_name | awk '{if(NR != 1) print $0}' | grep -x -e "$READ") 
