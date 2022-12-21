@@ -79,7 +79,7 @@ function create_table
     elif [[ $table_name =~ [/] ]] 
         then
             sending_error "Can't use / in naming the table"
-    elif [[ $table_name =~ [.:\|\-] ]] 
+    elif [[ $table_name =~ [.:*"#""@""$"")""}""{""("!"|""\\"-] ]] 
         then
             sending_error "Can't use special character in naming the table"
     elif [[ $table_name =~ [0-9] ]] 
